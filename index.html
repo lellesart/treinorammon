@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lelles Team - Treino Interativo</title>
+    <title>Lelles Team - Treino</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Plus Jakarta Sans & Inter -->
@@ -23,7 +23,7 @@
         .brand-font {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        /* Custom scrollbar for clean look */
+        /* Custom scrollbar para visual premium */
         ::-webkit-scrollbar {
             width: 5px;
         }
@@ -42,13 +42,45 @@
             50% { opacity: 0.85; transform: scale(0.98); }
         }
     </style>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="p-0 sm:p-4 md:p-8">
+
+    
+    <!-- Modal de Login Supabase -->
+    <div id="login-modal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-6 flex flex-col">
+            <div class="text-center mb-6">
+                <h1 class="text-[#3B52F6] text-3xl font-extrabold tracking-wider leading-none brand-font">LELLES</h1>
+                <span class="text-gray-700 text-lg font-light tracking-[0.25em] block -mt-1 uppercase brand-font">Team</span>
+                <div class="w-24 h-[3px] bg-[#22C55E] mx-auto mt-2 rounded-full"></div>
+                <p class="text-xs text-gray-500 mt-3">Entre com seu e-mail para acessar seu logbook</p>
+            </div>
+            
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1 uppercase tracking-wide">E-mail</label>
+                    <input type="email" id="login-email" placeholder="seu@email.com" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#3B52F6] focus:ring-1 focus:ring-[#3B52F6] transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1 uppercase tracking-wide">Senha</label>
+                    <input type="password" id="login-password" placeholder="Mínimo 6 caracteres" required minlength="6" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#3B52F6] focus:ring-1 focus:ring-[#3B52F6] transition-all">
+                </div>
+                <div id="login-error" class="hidden text-xs text-rose-600 font-bold bg-rose-50 p-2.5 rounded-xl text-center"></div>
+                <div id="login-info" class="hidden text-xs text-emerald-700 font-bold bg-emerald-50 p-2.5 rounded-xl text-center"></div>
+                
+                <button type="submit" id="login-btn" class="w-full bg-[#3B52F6] hover:bg-[#2563EB] text-white font-bold py-3.5 rounded-xl shadow-md active:scale-95 transition-all">
+                    Entrar
+                </button>
+            </form>
+        </div>
+    </div>
 
     <!-- Container Principal com mockup Mobile Premium -->
     <div class="w-full max-w-md bg-gradient-to-b from-[#E3EDF7] to-[#F1EEF9] min-h-screen sm:min-h-[850px] sm:rounded-[40px] shadow-2xl relative flex flex-col overflow-hidden border border-white/20">
         
-        <!-- Status Bar Mock para Celular (Apenas visual premium se na tela cheia) -->
+        <!-- Status Bar Mock para Celular -->
         <div class="hidden sm:flex justify-between items-center px-6 pt-3 pb-2 text-xs text-gray-500 font-medium select-none">
             <span id="mock-time">--:--</span>
             <div class="flex items-center space-x-1.5">
@@ -60,21 +92,21 @@
 
         <!-- HEADER GERAL (Lelles Team) -->
         <header class="px-6 pt-4 pb-2 flex flex-col items-center relative">
-            <!-- Botão Voltar (Aparece condicionalmente) -->
+            <!-- Botão Voltar -->
             <button id="btn-back" class="hidden absolute left-6 top-6 bg-[#63B831] hover:bg-[#529d27] text-white p-2.5 rounded-full transition-transform active:scale-95 shadow-md flex items-center justify-center z-20">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
             </button>
 
-            <!-- Menu Auxiliar Superior (Home) -->
+            <!-- Menu Auxiliar Superior -->
             <div id="top-nav-menu" class="w-full flex justify-between items-center mb-2">
-                <a href="http://wa.me/5521995513667" target="_blank" class="flex flex-col items-center group">
-                    <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center transition-transform group-hover:scale-105 active:scale-95 border border-emerald-200">
+                <button onclick="window.open('https://api.whatsapp.com/send?phone=5521995513667&text=Ol%C3%A1%20Lelles%20Team!%20Gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20meu%20treino.', '_blank')" class="flex flex-col items-center group focus:outline-none">
+                    <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center transition-all group-hover:scale-105 active:scale-95 border border-emerald-200 shadow-sm">
                         <svg class="w-5 h-5 text-emerald-600" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.454L0 24zm6.59-4.846c1.6.95 3.198 1.451 4.82 1.452 5.423 0 9.835-4.416 9.838-9.842.002-2.628-1.017-5.1-2.868-6.958-1.851-1.855-4.324-2.877-6.953-2.879-5.429 0-9.843 4.415-9.846 9.845-.001 1.733.456 3.424 1.325 4.908L1.875 22.03l4.772-1.252a9.78 9.78 0 0 0 .003-.024zm11.332-6.52c-.27-.136-1.602-.79-1.85-.88-.246-.089-.427-.136-.607.136-.18.272-.696.88-.853 1.059-.158.18-.315.2-.585.065-.27-.136-1.14-.42-2.172-1.34-1.03-.92-1.725-2.057-1.928-2.4-.203-.34-.022-.523.147-.692.153-.153.34-.397.51-.595.17-.198.226-.34.34-.567.113-.227.056-.425-.028-.594-.085-.17-.607-1.464-.83-2.007-.218-.524-.457-.453-.627-.461-.162-.008-.348-.01-.535-.01-.188 0-.494.07-.753.355-.26.284-.99.968-.99 2.36 0 1.393 1.013 2.74 1.155 2.933.14.193 1.995 3.046 4.832 4.27 1.895.818 2.658.892 3.59.753.535-.08 1.602-.656 1.83-1.26.227-.603.227-1.12.158-1.228-.068-.113-.248-.18-.518-.316z"/></svg>
                     </div>
                     <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wide mt-1">Suporte</span>
-                </a>
+                </button>
 
                 <!-- Logo Centralizada -->
                 <div class="text-center flex-1">
@@ -83,14 +115,23 @@
                     <div class="w-32 h-[3px] bg-[#22C55E] mx-auto mt-1 rounded-full"></div>
                 </div>
 
-                <a href="https://chat.whatsapp.com/J3IjAfavdLyKcgavGFk3sF" target="_blank" class="flex flex-col items-center group">
-                    <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center transition-transform group-hover:scale-105 active:scale-95 border border-indigo-200">
-                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                                <!-- Botão Logout -->
+                <button id="btn-logout" onclick="handleLogout()" class="flex flex-col items-center group focus:outline-none">
+                    <div class="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center transition-all group-hover:scale-105 active:scale-95 border border-rose-200 shadow-sm">
+                        <svg class="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                     </div>
-                    <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wide mt-1">Ofertas</span>
-                </a>
+                    <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wide mt-1">Sair</span>
+                </button>
+
             </div>
         </header>
+
+        <!-- Indicador de Sincronização -->
+        <div id="sync-indicator" class="flex items-center justify-center space-x-1.5 py-1">
+            <div class="sync-dot w-2 h-2 rounded-full bg-gray-300"></div>
+            <span class="sync-text text-[10px] text-gray-400 font-semibold uppercase tracking-wider">Offline</span>
+        </div>
+
 
         <!-- CONTEÚDO PRINCIPAL (Troca de Telas) -->
         <main class="flex-1 px-5 pb-6 overflow-y-auto">
@@ -119,12 +160,11 @@
                     </div>
                 </div>
 
-                <!-- Painel de Seleção Rápida de Treino/Cardio (Figma Bottom) -->
+                <!-- Painel de Seleção Rápida de Treino/Cardio -->
                 <div class="grid grid-cols-2 gap-4 pt-6">
                     <!-- Botão Treino (Verde Pastel) -->
                     <button onclick="navigateTo('days')" class="bg-[#A4D3C4] hover:bg-[#92c5b6] text-gray-800 rounded-3xl p-5 flex flex-col items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 transform active:scale-95 border border-white/40 group">
                         <div class="w-16 h-16 rounded-full bg-white/40 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                            <!-- Novo Ícone PNG de Treino -->
                             <img src="https://i.postimg.cc/tgL1LP2P/weight-1.png" class="w-10 h-10 object-contain" alt="Ícone haltere">
                         </div>
                         <span class="font-bold text-lg tracking-wide">Treino</span>
@@ -133,7 +173,6 @@
                     <!-- Botão Cardio (Lilás Pastel) -->
                     <button onclick="navigateTo('cardio')" class="bg-[#D8B4FE] hover:bg-[#cfa5fa] text-gray-800 rounded-3xl p-5 flex flex-col items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 transform active:scale-95 border border-white/40 group">
                         <div class="w-16 h-16 rounded-full bg-white/40 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                            <!-- Novo Ícone PNG de Cardio -->
                             <img src="https://i.postimg.cc/vmp1p93f/treadmill-1.png" class="w-10 h-10 object-contain" alt="Ícone esteira">
                         </div>
                         <span class="font-bold text-lg tracking-wide">Cardio</span>
@@ -149,8 +188,8 @@
                 </div>
 
                 <div class="flex flex-col space-y-4">
-                    <!-- Dias Dinâmicos reestruturados para o split de 4 dias -->
-                    <button onclick="openWorkout(1)" class="w-full bg-white hover:bg-gray-50 text-gray-800 py-5 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all transform active:scale-98 flex justify-between items-center border border-gray-100 group">
+                    <!-- Dia 1 - Peito -->
+                    <button onclick="openWorkout(1)" class="w-full bg-white hover:bg-gray-50 text-gray-800 py-5 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all transform active:scale-95 flex justify-between items-center border border-gray-100 group">
                         <span class="text-xl font-extrabold tracking-wider group-hover:text-[#3B52F6] transition-colors">Dia 1</span>
                         <div class="flex items-center space-x-2">
                             <span class="text-xs bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full font-semibold">Peito</span>
@@ -158,7 +197,8 @@
                         </div>
                     </button>
 
-                    <button onclick="openWorkout(2)" class="w-full bg-white hover:bg-gray-50 text-gray-800 py-5 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all transform active:scale-98 flex justify-between items-center border border-gray-100 group">
+                    <!-- Dia 2 - Costas -->
+                    <button onclick="openWorkout(2)" class="w-full bg-white hover:bg-gray-50 text-gray-800 py-5 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all transform active:scale-95 flex justify-between items-center border border-gray-100 group">
                         <span class="text-xl font-extrabold tracking-wider group-hover:text-[#3B52F6] transition-colors">Dia 2</span>
                         <div class="flex items-center space-x-2">
                             <span class="text-xs bg-rose-50 text-rose-600 px-3 py-1 rounded-full font-semibold">Costas</span>
@@ -166,7 +206,8 @@
                         </div>
                     </button>
 
-                    <button onclick="openWorkout(3)" class="w-full bg-white hover:bg-gray-50 text-gray-800 py-5 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all transform active:scale-98 flex justify-between items-center border border-gray-100 group">
+                    <!-- Dia 3 - Pernas -->
+                    <button onclick="openWorkout(3)" class="w-full bg-white hover:bg-gray-50 text-gray-800 py-5 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all transform active:scale-95 flex justify-between items-center border border-gray-100 group">
                         <span class="text-xl font-extrabold tracking-wider group-hover:text-[#3B52F6] transition-colors">Dia 3</span>
                         <div class="flex items-center space-x-2">
                             <span class="text-xs bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-semibold">Pernas</span>
@@ -174,7 +215,8 @@
                         </div>
                     </button>
 
-                    <button onclick="openWorkout(4)" class="w-full bg-white hover:bg-gray-50 text-gray-800 py-5 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all transform active:scale-98 flex justify-between items-center border border-gray-100 group">
+                    <!-- Dia 4 - Superior -->
+                    <button onclick="openWorkout(4)" class="w-full bg-white hover:bg-gray-50 text-gray-800 py-5 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all transform active:scale-95 flex justify-between items-center border border-gray-100 group">
                         <span class="text-xl font-extrabold tracking-wider group-hover:text-[#3B52F6] transition-colors">Dia 4</span>
                         <div class="flex items-center space-x-2">
                             <span class="text-xs bg-purple-50 text-purple-600 px-3 py-1 rounded-full font-semibold">Superior</span>
@@ -201,103 +243,135 @@
                     </div>
                 </div>
 
+                <!-- Abas do Treino -->
+                <div class="grid grid-cols-2 gap-2 bg-white/70 p-1.5 rounded-2xl border border-white/60 shadow-sm">
+                    <button id="tab-training" onclick="setWorkoutTab('training')" class="py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wide transition-all">
+                        Treino
+                    </button>
+                    <button id="tab-logbook" onclick="setWorkoutTab('logbook')" class="py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wide transition-all">
+                        Logbook
+                    </button>
+                </div>
+
                 <!-- Lista de Cards de Exercício -->
                 <div id="exercise-list-container" class="space-y-4">
                     <!-- Injetado dinamicamente via JS -->
                 </div>
+
+                <!-- Diário de treino -->
+                <div id="logbook-container" class="hidden space-y-4">
+                    <!-- Injetado dinamicamente via JS -->
+                </div>
             </div>
 
-            <!-- ================= TELA 4: CARDIO INTERATIVO ================= -->
+            <!-- ================= TELA 4: CARDIO INTERATIVO UNIFICADO ================= -->
             <div id="view-cardio" class="hidden space-y-6 pt-4">
-                <div class="text-center">
+                <div class="text-center mb-2">
                     <h3 class="text-xl font-bold text-gray-800">Sessões de Cardio</h3>
-                    <p class="text-xs text-gray-500">Inicie suas sessões aeróbicas e acompanhe o tempo</p>
+                    <p class="text-xs text-gray-500">Mantenha o foco na queima calórica e saúde cardiovascular</p>
                 </div>
 
-                <!-- QUADRADO CARDIO HIIT (15 MIN) -->
-                <div id="cardio-hiit-container" class="bg-white rounded-3xl p-5 shadow-xl border border-emerald-100 flex flex-col items-center transition-colors duration-500">
-                    <div class="w-full flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
+                <!-- SEÇÃO 1: CARDIO MÉDIO CONSTANTE -->
+                <div class="bg-white rounded-[32px] p-5 shadow-xl border border-slate-100 flex flex-col">
+                    <div class="w-full flex items-center justify-between mb-4">
                         <div class="flex items-center space-x-2">
-                            <div id="hiit-pulse-indicator" class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></div>
-                            <span id="hiit-state-tag" class="text-xs font-bold text-emerald-600 uppercase tracking-wide">Descanso</span>
+                            <div id="media-pulse-indicator" class="w-2.5 h-2.5 bg-indigo-500 rounded-full"></div>
+                            <span class="text-sm font-bold text-indigo-600 uppercase tracking-wide">Moderado (Média)</span>
                         </div>
-                        <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold">Meta: 15min</span>
+                        <span class="text-[10px] bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full font-bold">Meta: 30min (3x)</span>
                     </div>
 
-                    <!-- Dual Timer HIIT -->
-                    <div class="flex items-center space-x-6 my-1">
-                        <!-- Tempo Total Restante -->
-                        <div class="flex flex-col items-center">
-                            <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Tempo Total</span>
-                            <div class="text-xl font-extrabold text-gray-700 font-mono" id="cardio-hiit-total">15:00</div>
-                        </div>
-
-                        <!-- Ciclo Atual de 30s -->
-                        <div class="relative w-24 h-24 flex items-center justify-center">
+                    <!-- Caixa Interna de Tempo -->
+                    <div class="bg-indigo-50/20 border border-indigo-100/30 rounded-[24px] p-5 flex items-center justify-between">
+                        <!-- Lado Esquerdo: Tempo Total em Círculo -->
+                        <div class="relative w-24 h-24 flex items-center justify-center bg-white rounded-full shadow-sm">
                             <svg class="absolute w-full h-full transform -rotate-90">
-                                <circle cx="48" cy="48" r="40" stroke="#F3F4F6" stroke-width="3" fill="transparent"/>
-                                <circle id="cardio-hiit-progress" cx="48" cy="48" r="40" stroke="#10B981" stroke-width="4" fill="transparent" stroke-dasharray="251.2" stroke-dashoffset="0" class="transition-all duration-1000"/>
+                                <circle cx="48" cy="48" r="40" stroke="#F3F4F6" stroke-width="4" fill="transparent"/>
+                                <circle id="cardio-media-progress" cx="48" cy="48" r="40" stroke="#6366F1" stroke-width="4" stroke-linecap="round" fill="transparent" stroke-dasharray="251.2" stroke-dashoffset="0" class="transition-all duration-1000"/>
                             </svg>
                             <div class="flex flex-col items-center z-10">
-                                <span class="text-[20px] font-extrabold text-gray-800 font-mono" id="cardio-hiit-interval">30s</span>
-                                <span class="text-[8px] text-gray-400 font-bold uppercase tracking-wider" id="hiit-substate-text">Baixa</span>
+                                <span class="text-[18px] font-extrabold text-gray-800 font-mono" id="cardio-media-total">30:00</span>
+                                <span class="text-[8px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">TOTAL</span>
                             </div>
+                        </div>
+
+                        <!-- Lado Direito: Informação do Estágio -->
+                        <div class="flex-1 flex flex-col items-center justify-center pl-4 text-center">
+                            <span id="media-state-tag" class="inline-flex items-center bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+                                ESTÁVEL ⚡
+                            </span>
+                            <span class="text-3xl font-extrabold text-indigo-600 mt-2 font-mono">30min</span>
+                            <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mt-1">RITMO CONSTANTE</span>
                         </div>
                     </div>
 
-                    <!-- Controles -->
-                    <div class="flex space-x-2 w-full mt-3">
-                        <button id="btn-hiit-start" onclick="toggleCardioHiit()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-md active:scale-95 transition-all flex items-center justify-center space-x-1">
-                            <svg id="icon-hiit-play" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            <span id="txt-hiit-play">Iniciar</span>
+                    <!-- Botões de Controle -->
+                    <div class="flex space-x-2 w-full mt-4">
+                        <button id="btn-media-start" onclick="toggleCardioMedia()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 rounded-2xl text-sm font-bold shadow-md active:scale-95 transition-all flex items-center justify-center space-x-1">
+                            <span id="icon-media-play" class="flex items-center justify-center mr-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </span>
+                            <span id="txt-media-play">Iniciar</span>
                         </button>
-                        <button onclick="resetCardioHiit()" class="bg-gray-100 hover:bg-gray-200 text-gray-500 px-3 py-2.5 rounded-xl active:scale-95 transition-all">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 4.582"/></svg>
+                        <button onclick="resetCardioMedia()" class="bg-gray-100 hover:bg-gray-200 text-gray-500 w-14 h-14 rounded-2xl active:scale-95 transition-all flex items-center justify-center">
+                            <img src="https://i.postimg.cc/25SKFvZk/stopwatch.png" alt="Cronômetro" class="w-6 h-6 object-contain">
                         </button>
                     </div>
 
-                    <p class="text-xs text-gray-500 font-medium text-center mt-3.5 border-t border-gray-100 pt-2.5 w-full text-center">
-                        3x na semana - 15min (30s intensidade alta e 30s em intensidade baixa).
+                    <p class="text-xs text-gray-500 font-medium text-center mt-4 border-t border-gray-100 pt-3 px-2 leading-relaxed">
+                        3x na semana - 30min em intensidade média (ritmo moderado constante e sem paradas).
                     </p>
                 </div>
 
-                <!-- QUADRADO CARDIO MÉDIO (30 MIN) -->
-                <div id="cardio-media-container" class="bg-white rounded-3xl p-5 shadow-xl border border-indigo-100 flex flex-col items-center transition-colors duration-500">
-                    <div class="w-full flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
+                <!-- SEÇÃO 2: CARDIO HIIT DE ALTA INTENSIDADE -->
+                <div class="bg-white rounded-[32px] p-5 shadow-xl border border-slate-100 flex flex-col">
+                    <div class="w-full flex items-center justify-between mb-4">
                         <div class="flex items-center space-x-2">
-                            <div id="media-pulse-indicator" class="w-2.5 h-2.5 bg-indigo-500 rounded-full"></div>
-                            <span id="media-state-tag" class="text-xs font-bold text-indigo-600 uppercase tracking-wide">Intensidade Média</span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#E11D48] animate-pulse"></span>
+                            <span class="text-sm font-bold text-[#E11D48] uppercase tracking-wide">Alta Intensidade (HIIT)</span>
                         </div>
-                        <span class="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full font-bold">Meta: 30min</span>
+                        <span class="text-[10px] bg-rose-50 text-rose-700 px-3 py-1 rounded-full font-bold">Meta: 15min (1x)</span>
                     </div>
 
-                    <!-- Dual Timer adaptado para intensidade constante -->
-                    <div class="flex items-center space-x-6 my-1">
-                        <div class="relative w-24 h-24 flex items-center justify-center">
+                    <!-- Caixa Interna de Tempo HIIT -->
+                    <div class="bg-[#FFF5F7] border border-rose-100/50 rounded-[24px] p-5 flex items-center justify-between">
+                        <!-- Lado Esquerdo: Tempo Total em Círculo (15:00 TOTAL) -->
+                        <div class="relative w-28 h-28 flex items-center justify-center bg-white rounded-full shadow-sm">
                             <svg class="absolute w-full h-full transform -rotate-90">
-                                <circle cx="48" cy="48" r="40" stroke="#F3F4F6" stroke-width="3" fill="transparent"/>
-                                <circle id="cardio-media-progress" cx="48" cy="48" r="40" stroke="#6366F1" stroke-width="4" fill="transparent" stroke-dasharray="251.2" stroke-dashoffset="0" class="transition-all duration-1000"/>
+                                <circle cx="56" cy="56" r="48" stroke="#F3F4F6" stroke-width="4" fill="transparent"/>
+                                <circle id="cardio-hiit-progress" cx="56" cy="56" r="48" stroke="#E11D48" stroke-width="4" stroke-linecap="round" fill="transparent" stroke-dasharray="301.6" stroke-dashoffset="0" class="transition-all duration-1000"/>
                             </svg>
                             <div class="flex flex-col items-center z-10">
-                                <span class="text-[20px] font-extrabold text-gray-800 font-mono" id="cardio-media-total">30:00</span>
-                                <span class="text-[8px] text-gray-400 font-bold uppercase tracking-wider">Restante</span>
+                                <span class="text-[20px] font-extrabold text-gray-900 font-mono tracking-tight" id="cardio-hiit-total">15:00</span>
+                                <span class="text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">TOTAL</span>
                             </div>
+                        </div>
+
+                        <!-- Lado Direito: Temporizador do Estágio HIIT (30s) -->
+                        <div class="flex-1 flex flex-col items-center justify-center pl-4 text-center">
+                            <span id="hiit-state-tag" class="inline-flex items-center bg-rose-100/60 text-rose-600 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+                                CORRIDA 🔥
+                            </span>
+                            <span id="cardio-hiit-interval-time" class="text-4xl font-extrabold text-[#E11D48] mt-2 font-mono">30s</span>
+                            <span id="cardio-hiit-phase-title" class="text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-1">ESTÁGIO: 30S / 30S</span>
                         </div>
                     </div>
 
-                    <!-- Controles do Cardio Médio -->
-                    <div class="flex space-x-2 w-full mt-3">
-                        <button id="btn-media-start" onclick="toggleCardioMedia()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-md active:scale-95 transition-all flex items-center justify-center space-x-1">
-                            <svg id="icon-media-play" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path id="icon-media-path" d="M8 5v14l11-7z"/></svg>
-                            <span id="txt-media-play">Iniciar</span>
+                    <!-- Botões de Controle HIIT -->
+                    <div class="flex space-x-2 w-full mt-4">
+                        <button id="btn-hiit-start" onclick="toggleCardioHiit()" class="flex-1 bg-[#E11D48] hover:bg-[#C2113F] text-white py-3.5 rounded-2xl text-sm font-bold shadow-md active:scale-95 transition-all flex items-center justify-center space-x-1">
+                            <span id="icon-hiit-play" class="flex items-center justify-center mr-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </span>
+                            <span id="txt-hiit-play">Iniciar</span>
                         </button>
-                        <button onclick="resetCardioMedia()" class="bg-gray-100 hover:bg-gray-200 text-gray-500 px-3 py-2.5 rounded-xl active:scale-95 transition-all">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 4.582"/></svg>
+                        <button onclick="resetCardioHiit()" class="bg-gray-100 hover:bg-gray-200 text-gray-500 w-14 h-14 rounded-2xl active:scale-95 transition-all flex items-center justify-center">
+                            <img src="https://i.postimg.cc/25SKFvZk/stopwatch.png" alt="Cronômetro" class="w-6 h-6 object-contain">
                         </button>
                     </div>
 
-                    <p class="text-xs text-gray-500 font-medium text-center mt-3.5 border-t border-gray-100 pt-2.5 w-full text-center">
-                        1x na semana - 30min em intensidade média (ritmo moderado constante).
+                    <p class="text-xs text-gray-500 font-medium text-center mt-4 border-t border-gray-100 pt-3 px-2 leading-relaxed">
+                        1x na semana - 15min totais alternando 30 segundos de alta intensidade (Corrida rápida) com 30 segundos de recuperação ativa (Descanso).
                     </p>
                 </div>
             </div>
@@ -308,7 +382,6 @@
         <div id="rest-timer-bar" class="hidden fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm bg-gray-900/95 backdrop-blur-md text-white rounded-2xl p-4 shadow-2xl border border-white/10 flex items-center justify-between transition-all duration-300 z-50 transform -translate-y-10 opacity-0">
             <div class="flex items-center space-x-3">
                 <div class="relative w-12 h-12 flex items-center justify-center">
-                    <!-- Círculo de progresso animado em SVG -->
                     <svg class="absolute w-full h-full transform -rotate-90">
                         <circle cx="24" cy="24" r="20" stroke="currentColor" class="text-gray-700" stroke-width="3" fill="transparent"/>
                         <circle id="timer-progress-ring" cx="24" cy="24" r="20" stroke="currentColor" class="text-[#22C55E]" stroke-width="3" fill="transparent" stroke-dasharray="125.6" stroke-dashoffset="0"/>
@@ -322,7 +395,7 @@
             </div>
             <div class="flex space-x-2">
                 <button onclick="addTimerTime(15)" class="bg-gray-800 hover:bg-gray-700 text-[11px] font-bold px-2.5 py-1.5 rounded-lg border border-gray-700 active:scale-95">+15s</button>
-                <button onclick="stopRestTimer()" class="bg-rose-500 hover:bg-rose-600 p-1.5 rounded-lg active:scale-95">
+                <button onclick="stopRestTimer()" class="bg-rose-600 p-1.5 rounded-lg active:bg-rose-700 active:scale-95 transition-all flex items-center justify-center">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
@@ -343,9 +416,7 @@
             </div>
             
             <div class="p-6 overflow-y-auto space-y-4">
-                <!-- Ilustração do Boneco Anatômico (Reduzido para metade do tamanho original) -->
                 <div class="flex justify-center bg-gray-50 py-4 rounded-2xl relative border border-gray-100">
-                    <!-- Boneco Muscular em SVG com tamanho reduzido (w-20 h-32) -->
                     <svg class="w-20 h-32 text-gray-300" viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <!-- Cabeça e Pescoço -->
                         <circle cx="50" cy="20" r="10" fill="currentColor"/>
@@ -355,50 +426,38 @@
                         <path d="M35 40h30l-5 60h-20z" fill="currentColor"/>
                         
                         <!-- Músculos Alvos Marcados Dinamicamente (Highlight) -->
-                        <!-- Costas (Default inativo) -->
                         <path id="svg-latissimus" d="M38 50h24l-3 40h-18z" fill="#E2E8F0"/>
-                        <!-- Peito (Default inativo) -->
                         <path id="svg-pectoral" d="M37 42h26l-2 20h-22z" fill="#E2E8F0"/>
-                        <!-- Ombros / Deltoides -->
                         <circle id="svg-deltoids-l" cx="33" cy="45" r="5" fill="#E2E8F0"/>
                         <circle id="svg-deltoids-r" cx="67" cy="45" r="5" fill="#E2E8F0"/>
-                        <!-- Bíceps -->
                         <rect id="svg-biceps-l" x="29" y="52" width="5" height="15" rx="2" fill="#E2E8F0"/>
                         <rect id="svg-biceps-r" x="66" y="52" width="5" height="15" rx="2" fill="#E2E8F0"/>
-                        <!-- Tríceps -->
                         <rect id="svg-triceps-l" x="27" y="52" width="4" height="15" rx="2" fill="#E2E8F0"/>
                         <rect id="svg-triceps-r" x="69" y="52" width="4" height="15" rx="2" fill="#E2E8F0"/>
-                        <!-- Pernas/Quadríceps -->
                         <path id="svg-quads-l" d="M36 102h11v45h-9z" fill="#E2E8F0"/>
                         <path id="svg-quads-r" d="M53 102h11v45h-9z" fill="#E2E8F0"/>
-                        <!-- Abdômen -->
                         <rect id="svg-abs" x="42" y="65" width="16" height="25" rx="1" fill="#E2E8F0"/>
 
-                        <!-- Membros Básicos (Braços/Pernas padrão) -->
+                        <!-- Membros Básicos -->
                         <path d="M33 40 L28 75 L22 105" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
                         <path d="M67 40 L72 75 L78 105" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
                         <path d="M40 100 L38 150 L35 190" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>
                         <path d="M60 100 L62 150 L65 190" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>
                     </svg>
-                    <!-- Tag de indicação sobre o músculo ativo -->
                     <span id="modal-muscle-tag" class="absolute bottom-2 right-2 bg-red-100 text-red-700 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Músculo Alvo</span>
                 </div>
 
                 <!-- Detalhes e Dicas -->
                 <div class="space-y-3">
                     <h4 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Foco na Postura & Biomecânica</h4>
-                    <!-- Dica dinâmica posicionada abaixo do Foco na Postura e Biomecânica -->
                     <div id="modal-exe-tip-container" class="bg-indigo-50 border border-indigo-100/70 rounded-xl p-3">
-                        <p id="modal-exe-tip" class="text-[11px] text-indigo-800 font-medium leading-relaxed">
-                            <!-- Dica do exercício inserida via JS -->
-                        </p>
+                        <p id="modal-exe-tip" class="text-[11px] text-indigo-800 font-medium leading-relaxed"></p>
                     </div>
                 </div>
                 
-                <!-- Retângulo amarelo com o texto padrão estático -->
                 <div class="bg-amber-50 rounded-xl p-3.5 border border-amber-200">
                     <p class="text-[11px] text-amber-900 font-bold leading-normal" id="modal-exe-warning">
-                        Padrão Lelles Team: A técnica perfeita é inegociável. Suba o peso com máxima força e explosão (fase concêntrica) e controle bem o retorno na descida (fase excêntrica), alongando o músculo por completo a cada repetição.
+                        Padrão Lelles Team: A técnica perfeita é inegociável. Suba o peso com máxima força e explosão (fase concêntrica) e controle bem o retorno na descida (fase excêntrica), alongando o muscle por completo a cada repetição.
                     </p>
                 </div>
             </div>
@@ -409,144 +468,658 @@
         </div>
     </div>
 
-    <!-- 3. Modal de Suporte -->
-    <div id="modal-support" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4">
-            <div class="flex items-center space-x-3 text-emerald-600">
-                <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.454L0 24zm6.59-4.846c1.6.95 3.198 1.451 4.82 1.452 5.423 0 9.835-4.416 9.838-9.842.002-2.628-1.017-5.1-2.868-6.958-1.851-1.855-4.324-2.877-6.953-2.879-5.429 0-9.843 4.415-9.846 9.845-.001 1.733.456 3.424 1.325 4.908L1.875 22.03l4.772-1.252a9.78 9.78 0 0 0 .003-.024zm11.332-6.52c-.27-.136-1.602-.79-1.85-.88-.246-.089-.427-.136-.607.136-.18.272-.696.88-.853 1.059-.158.18-.315.2-.585.065-.27-.136-1.14-.42-2.172-1.34-1.03-.92-1.725-2.057-1.928-2.4-.203-.34-.022-.523.147-.692.153-.153.34-.397.51-.595.17-.198.226-.34.34-.567.113-.227.056-.425-.028-.594-.085-.17-.607-1.464-.83-2.007-.218-.524-.457-.453-.627-.461-.162-.008-.348-.01-.535-.01-.188 0-.494.07-.753.355-.26.284-.99.968-.99 2.36 0 1.393 1.013 2.74 1.155 2.933.14.193 1.995 3.046 4.832 4.27 1.895.818 2.658.892 3.59.753.535-.08 1.602-.656 1.83-1.26.227-.603.227-1.12.158-1.228-.068-.113-.248-.18-.518-.316z"/></svg>
-                </div>
-                <h3 class="text-xl font-bold text-gray-800">Canal de Suporte</h3>
-            </div>
-            <p class="text-xs text-gray-600 leading-relaxed">
-                Tem dúvidas sobre a execução do treino, cargas ou dieta? Envie uma mensagem direta para a nossa equipe de suporte.
-            </p>
-            <div class="space-y-2">
-                <a href="http://wa.me/5521995513667?text=Ol%C3%A1%20Lelles%20Team!%20Gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20meu%20treino." target="_blank" class="w-full bg-[#25D366] hover:bg-[#20ba59] text-white py-3 rounded-2xl font-bold flex items-center justify-center space-x-2 transition-colors">
-                    <span>Falar no WhatsApp</span>
-                </a>
-                <button onclick="closeSupportModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-500 py-3 rounded-2xl font-bold text-xs transition-colors">Fechar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. Modal de Ofertas / Loja -->
-    <div id="modal-offers" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4">
-            <div class="flex items-center space-x-3 text-indigo-600">
-                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                </div>
-                <h3 class="text-xl font-bold text-gray-800">Ofertas Exclusivas</h3>
-            </div>
-            <p class="text-xs text-gray-600 leading-relaxed">
-                Confira produtos e cupons selecionados pelo Lelles Team para impulsionar seus resultados:
-            </p>
-            <div class="space-y-3">
-                <div class="p-3 bg-indigo-50 rounded-2xl flex justify-between items-center border border-indigo-100">
-                    <div>
-                        <span class="block text-xs font-bold text-indigo-700">Whey Protein Lelles Gold</span>
-                        <span class="text-[10px] text-gray-400">10% OFF com cupom LELLES10</span>
-                    </div>
-                    <span class="text-xs font-bold text-gray-700">R$ 119,00</span>
-                </div>
-                <div class="p-3 bg-purple-50 rounded-2xl flex justify-between items-center border border-purple-100">
-                    <div>
-                        <span class="block text-xs font-bold text-purple-700">Acessórios de Treino</span>
-                        <span class="text-[10px] text-gray-400">Kit Faixas & Cintos</span>
-                    </div>
-                    <span class="text-xs font-bold text-gray-700">R$ 89,00</span>
-                </div>
-            </div>
-            <button onclick="closeOffersModal()" class="w-full bg-gray-900 hover:bg-gray-800 text-white py-3 rounded-2xl font-bold text-xs transition-colors">Fechar Loja</button>
-        </div>
-    </div>
-
     <!-- Script de lógica interativa -->
     <script>
-        // Dados Estruturados de Exercícios dos Dias (Novo split de 4 Dias com as especificações do Rammon)
-        const workoutData = {
-            1: {
-                title: "Dia 1",
-                muscle: "Peito",
-                exercises: [
-                    { id: "e1-1", name: "Supino inclinado hbc", sets: "4X", reps: "12-15 reps", note: "Duas últimas séries até a falha", target: "pectoral", warning: "Peito estufado e a frente dos seus ombros. Empurre o peso para cima com os cotovelos levemente virados para dentro.", videoLink: "https://www.youtube.com/shorts/JM1yJGN-hKQ", conjugatedGroup: null },
-                    { id: "e1-2", name: "Supino inclinado maq", sets: "4X", reps: "12-15 reps", note: "Duas últimas séries até a falha", target: "pectoral", warning: "Peito estufado e a frente dos seus ombros. Empurre o peso para cima com os cotovelos levemente virados para dentro.", videoLink: "https://www.youtube.com/shorts/TkK7VHMA_VE", conjugatedGroup: null },
-                    { id: "e1-3", name: "Paralela livre com carga", sets: "3X", reps: "2x 6-9 / 1x 12-15 reps", note: "Duas últimas séries até a falha", target: "pectoral", warning: "Incline o tronco ligeiramente para a frente para recrutar mais fibras do peito. Mantenha os cotovelos estáveis.", videoLink: "https://www.youtube.com/watch?v=yiingXnH9GY", conjugatedGroup: null },
-                    { id: "e1-4", name: "Crucifixo inclinado", sets: "3X", reps: "8-12 reps", note: "Última série até a falha + dropset", target: "pectoral", warning: "Peito estufado e a frente dos seus ombros. Halter fica na altura da parte superior do peito.", videoLink: "https://www.youtube.com/shorts/BNBsJFYBpqk", conjugatedGroup: null, isDropset: true },
-                    { id: "e1-5", name: "Elev lateral banco 45", sets: "3X", reps: "12-15 reps", note: "Última série até a falha + dropset", target: "deltoids", warning: "Incline-se lateralmente no banco, eleve os halteres de forma controlada concentrando a tensão na lateral do deltoide.", videoLink: "https://www.youtube.com/shorts/zA_RKAHGjHg", conjugatedGroup: null, isDropset: true },
-                    { id: "e1-6", name: "Triceps testa halter", sets: "3X", reps: "10-15 reps", note: "Duas últimas séries até a falha", target: "triceps", warning: "Flexione os cotovelos completos quando descer, na subida mantenha os cotovelos apontados para cima.", videoLink: "https://www.youtube.com/shorts/KDiBbTrOjG0", conjugatedGroup: null },
-                    { id: "e1-7", name: "Triceps francês polia", sets: "3X", reps: "12-15 reps", note: "Última série até a falha + dropset", target: "triceps", warning: "Braços podem ficar mais abertos com os cotovelos apontados pra fora pra maior conforto articular.", videoLink: "https://www.youtube.com/shorts/D41zJtSpuHI", conjugatedGroup: null, isDropset: true }
-                ]
-            },
-            2: {
-                title: "Dia 2",
-                muscle: "Costas",
-                exercises: [
-                    { id: "e2-1", name: "Puxada romana", sets: "4X", reps: "8-12 reps", note: "Duas últimas séries até a falha", target: "latissimus", warning: "Tronco o mais reto possível, abd contraído. Jogue os cotovelos pra baixo e não pra trás.", videoLink: "https://www.youtube.com/watch?v=PT7fynrJ2ec", conjugatedGroup: null },
-                    { id: "e2-2", name: "Remada cavalinho", sets: "4X", reps: "8-12 reps", note: "Duas últimas séries até a falha", target: "latissimus", warning: "Tronco paralelo ao chão, o movimento é do cotovelo pra trás em direção a sua linha de cintura. Pode trocar pela maquina caso tenha na academia.", videoLink: "https://www.youtube.com/watch?v=Zx12Qvsb3jM", conjugatedGroup: null },
-                    { id: "e2-3", name: "Remada pronada no banco", sets: "3X", reps: "12-15 reps", note: "Duas últimas séries até a falha", target: "latissimus", warning: "Pegada pronada, jogue os cotovelos pra trás fechando as escapulas. Pode trocar por maquinas que tenha pegada pronada ou pela remada no cabo com barra.", videoLink: "https://www.youtube.com/shorts/4csS_e4Sy7A", conjugatedGroup: null },
-                    { id: "e2-4", name: "Meio terra no smith", sets: "3X", reps: "2x 6-9 / 1x 12-15 reps", note: "Duas últimas séries até a falha", target: "latissimus", warning: "Trava de segurança na altura da canela. Suba levando o quadril a frente pensando em retrair as escapulas no fim do movimento, nao precisa estender o quadril pra frente curvando a lombar.", videoLink: "https://www.youtube.com/watch?v=FedLHPVJhQc", conjugatedGroup: null },
-                    { id: "e2-5", name: "Encolhimento smith", sets: "3X", reps: "8-12 reps", note: "Duas últimas séries até a falha", target: "deltoids", warning: "Inicie apertando as escapulas e só depois faça a elevação do trapézio.", videoLink: "https://www.youtube.com/shorts/e0DUR5zMXKc", conjugatedGroup: null },
-                    { id: "e2-6", name: "Rosca neutra apoiado", sets: "3X", reps: "10-15 reps", note: "Duas últimas séries até a falha", target: "biceps", warning: "Ombros e tríceps encostados na parede, movimento controlado.", videoLink: "https://www.youtube.com/watch?v=vITEmJ98LRI", conjugatedGroup: null },
-                    { id: "e2-7", name: "Rosca spider", sets: "3X", reps: "10-15 reps", note: "Duas últimas séries até a falha", target: "biceps", warning: "Cotovelos ficam fixos na mesma posição. Alongue o bíceps por completo quando estender os braços.", videoLink: "https://www.youtube.com/shorts/B9nwdAWNzCw", conjugatedGroup: null }
-                ]
-            },
-            3: {
-                title: "Dia 3",
-                muscle: "Pernas",
-                exercises: [
-                    { id: "e3-1", name: "Prancha", sets: "3X", reps: "45s a 2min", note: "Todas as séries difíceis", target: "abs", warning: "Abdômen contraído o tempo inteiro, expire pela boca soltando o ar pela barriga.", videoLink: "https://www.youtube.com/shorts/ffHr8a6DRvU", conjugatedGroup: null },
-                    { id: "e3-2", name: "Abd infra no espaldar", sets: "3X", reps: "max reps", note: "Todas as séries difíceis", target: "abs", warning: "Segure firme, traga a pelve para dentro na subida flexionando o abdômen e descendo de forma controlada.", videoLink: "https://www.youtube.com/watch?v=Gm-o2VQZx8s", conjugatedGroup: null },
-                    { id: "e3-3", name: "Cadeira adutora", sets: "3X", reps: "10-15 reps", note: "Duas últimas séries até a falha", target: "quads", warning: "Abdômen contraído. A força vem da parte interna das coxas.", videoLink: "https://www.youtube.com/shorts/lsb18p3cOAk", conjugatedGroup: null },
-                    { id: "e3-4", name: "Stiff máquina", sets: "4X", reps: "10-12 reps", note: "Duas últimas séries até a falha", target: "quads", warning: "Jogue o quadril pra trás sem flexionar os joelhos, chegue no limite da sua amplitude e pause por 1s antes de subir empurrando o quadril a frente.", videoLink: "https://www.youtube.com/watch?v=naIsDE3b310", conjugatedGroup: null },
-                    { id: "e3-5", name: "Gluteo no banco romano maq", sets: "4X", reps: "10-12 reps", note: "Duas últimas séries até a falha", target: "quads", warning: "Desça o apoio até ele ficar na altura da coxa, deixando o seu quadril livre. Desça deixando o gluteo alongar, pause por 1s e suba contraindo o gluteo. Nao precisa hiper estender a coluna. Pode trocar pelo banco romano com halter.", videoLink: "https://www.youtube.com/shorts/6FyZsNcihd8", conjugatedGroup: null },
-                    { id: "e3-6", name: "Cadeira extensora", sets: "3X", reps: "12-15 reps", note: "Duas últimas séries até a falha", target: "quads", warning: "Pernas ficam alinhadas ao quadril, empurde com explosão e segure o retorno.", videoLink: "https://www.youtube.com/shorts/4mLtKKD6IUE", conjugatedGroup: null },
-                    { id: "e3-7", name: "Abdutora em pé", sets: "3X", reps: "12-15 reps", note: "Duas últimas séries até a falha", target: "quads", warning: "Abdômen contraído o tempo inteiro, empurre fazendo força com a parte externa das coxas.", videoLink: "https://www.youtube.com/shorts/2FxSXz8SUOI", conjugatedGroup: null }
-                ]
-            },
-            4: {
-                title: "Dia 4",
-                muscle: "Superior",
-                exercises: [
-                    { id: "e4-1", name: "Abd polia", sets: "4X", reps: "8-12 reps", note: "Duas últimas séries até a falha", target: "abs", warning: "Ajoelhado, curve a coluna ativamente contraindo o abdômen contra a resistência.", videoLink: "https://www.youtube.com/shorts/W4FS_tKExuI", conjugatedGroup: null },
-                    { id: "e4-2", name: "Voador", sets: "4X", reps: "8-12 reps", note: "Duas últimas séries até a falha", target: "pectoral", warning: "Peito estufado e a frente dos seus ombros. Pense em encostar o bíceps na lateral do peito, as mãos não precisam encostar. Pode fazer na máquina ou na polia.", videoLink: "https://www.youtube.com/shorts/9BEQWr0u-ac", conjugatedGroup: null },
-                    { id: "e4-3", name: "Supino fechado smith", sets: "4X", reps: "8-12 reps", note: "Duas últimas séries até a falha", target: "triceps", warning: "Cotovelos para dentro, a pegada é fechada com a distância dos ombros ou um pouco menor. Desça até a parte baixa do peito. Pode fazer livre ou na maquina.", videoLink: "https://www.youtube.com/shorts/8_MS8s9ZcEU", conjugatedGroup: null },
-                    { id: "e4-4", name: "Puxada polia alta", sets: "3X", reps: "12-15 reps", note: "Última série até a falha", target: "latissimus", warning: "O movimento é jogando o cotovelo em direção ao seu quadril, pode inclinar e rotacionar levemente o tronco para alongar a dorsal. Dê preferência no banco, mas pode fazer no chão ou na máquina high row.", videoLink: "https://www.youtube.com/shorts/b4X8UUHQZxI", conjugatedGroup: null },
-                    { id: "e4-5", name: "Remada máquina neutra", sets: "4X", reps: "8-12 reps", note: "Duas últimas séries até a falha", target: "latissimus", warning: "Apoio abaixo do peito, movimento é feito jogando os cotovelos para trás em direção a parte baixa das costas. Pode trocar pela remada fechada no cabo.", videoLink: "https://www.youtube.com/shorts/vnXjj31Xu9U", conjugatedGroup: null },
-                    { id: "e4-6", name: "Elev lateral peito apoiado", sets: "3X", reps: "12-15 reps", note: "Última série até a falha + dropset", target: "deltoids", warning: "Peito apoiado no banco, os braços sobem a frente da linha do tronco.", videoLink: "https://www.youtube.com/shorts/Nea2S58aVRQ", conjugatedGroup: null, isDropset: true },
-                    { id: "e4-7", name: "Elev frontal polia", sets: "3X", reps: "8-12 reps", note: "Última série até a falha", target: "deltoids", warning: "Escapulas levemente retraídas, leve o braço acima até a mão chegar na altura dos seus ombros ou um pouco acima.", videoLink: "https://www.youtube.com/shorts/YH4YqqCfAOU", conjugatedGroup: null },
-                    { id: "e4-8", name: "Rosca scott", sets: "3X", reps: "10-15 reps", note: "Duas últimas séries até a falha", target: "biceps", warning: "Apoie bem os braços no banco Scott, alongue até o final e suba esmagando o bíceps no topo.", videoLink: "https://www.youtube.com/shorts/wiYKWO0AqvI", conjugatedGroup: null }
-                ]
-            }
-        };
 
-        // Estado do Aplicativo
+        // --- Supabase Config ---
+        const SUPABASE_URL = 'https://oxmstdirsbybxznhbhsw.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bXN0ZGlyc2J5Ynh6bmhiaHN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxODMyMzAsImV4cCI6MjA5Nzc1OTIzMH0.ljfDamIxtf_9HPWPNtcZLu5CQEf1lg7owcnUA7pyiQs';
+        const supaClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        let currentUser = null;
+        let syncDebounceTimer = null;
+
+        // ⚠️ CONFIGURAÇÃO DO ALUNO — Altere o e-mail abaixo para o e-mail do aluno dono deste treino
+        const ALLOWED_EMAIL = 'rammonnlima@gmail.com'; // <-- Trocar para o e-mail do aluno
+
+        // --- Sync Status Indicator ---
+        function setSyncStatus(status) {
+            const indicator = document.getElementById('sync-indicator');
+            if (!indicator) return;
+            const dot = indicator.querySelector('.sync-dot');
+            const text = indicator.querySelector('.sync-text');
+            if (status === 'syncing') {
+                dot.className = 'sync-dot w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+                text.textContent = 'Sincronizando...';
+            } else if (status === 'synced') {
+                dot.className = 'sync-dot w-2 h-2 rounded-full bg-emerald-500';
+                text.textContent = 'Sincronizado';
+            } else if (status === 'error') {
+                dot.className = 'sync-dot w-2 h-2 rounded-full bg-rose-500';
+                text.textContent = 'Erro ao sincronizar';
+            } else {
+                dot.className = 'sync-dot w-2 h-2 rounded-full bg-gray-300';
+                text.textContent = 'Offline';
+            }
+        }
+
+        // Auto-login check
+        async function checkSession() {
+            const { data: { session } } = await supaClient.auth.getSession();
+            if (session) {
+                // Verifica se o e-mail da sessão é o dono deste treino
+                if (session.user.email.toLowerCase() !== ALLOWED_EMAIL.toLowerCase()) {
+                    await supaClient.auth.signOut();
+                    document.getElementById('login-modal').classList.remove('hidden');
+                    return;
+                }
+                currentUser = session.user;
+                document.getElementById('login-modal').classList.add('hidden');
+                await syncLogbookFromSupabase();
+            } else {
+                document.getElementById('login-modal').classList.remove('hidden');
+            }
+        }
+
+        // Login Handler — apenas login, contas são criadas manualmente pelo treinador
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('login-form');
+            
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('login-email').value;
+                    const password = document.getElementById('login-password').value;
+                    const btn = document.getElementById('login-btn');
+                    const err = document.getElementById('login-error');
+                    const info = document.getElementById('login-info');
+                    
+                    if (!email || !password) {
+                        err.textContent = 'Preencha e-mail e senha.';
+                        err.classList.remove('hidden');
+                        return;
+                    }
+                    
+                    // Verifica se o e-mail é o dono deste treino ANTES de tentar login
+                    if (email.toLowerCase() !== ALLOWED_EMAIL.toLowerCase()) {
+                        err.textContent = 'Este treino não pertence a este e-mail. Verifique o link com seu treinador.';
+                        err.classList.remove('hidden');
+                        return;
+                    }
+                    
+                    btn.textContent = 'Aguarde...';
+                    btn.disabled = true;
+                    err.classList.add('hidden');
+                    info.classList.add('hidden');
+                    
+                    const { data, error } = await supaClient.auth.signInWithPassword({ email, password });
+                    
+                    if (error) {
+                        err.textContent = 'E-mail ou senha incorretos. Entre em contato com seu treinador.';
+                        err.classList.remove('hidden');
+                        btn.textContent = 'Entrar';
+                        btn.disabled = false;
+                        return;
+                    }
+                    
+                    currentUser = data.user;
+                    document.getElementById('login-modal').classList.add('hidden');
+                    await syncLogbookFromSupabase();
+                    btn.textContent = 'Entrar';
+                    btn.disabled = false;
+                });
+            }
+            checkSession();
+        });
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            const bgColor = type === 'error' ? 'bg-rose-600' : 'bg-emerald-600';
+            toast.className = `fixed top-6 left-1/2 -translate-x-1/2 ${bgColor} text-white text-sm font-bold px-6 py-3 rounded-2xl shadow-2xl z-[200] transition-all duration-500 opacity-0 -translate-y-4`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            requestAnimationFrame(() => {
+                toast.classList.remove('opacity-0', '-translate-y-4');
+                toast.classList.add('opacity-100', 'translate-y-0');
+            });
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-4');
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
+        // Sincroniza automaticamente quando o usuário volta para a aba do navegador
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && currentUser) {
+                syncLogbookFromSupabase();
+            }
+        });
+
+        // Logout
+        async function handleLogout() {
+            await supaClient.auth.signOut();
+            currentUser = null;
+            setSyncStatus('offline');
+            document.getElementById('login-modal').classList.remove('hidden');
+        }
+
+        async function syncLogbookFromSupabase() {
+            if (!currentUser) return;
+            setSyncStatus('syncing');
+            const { data, error } = await supaClient
+                .from('logbooks')
+                .select('data')
+                .eq('user_id', currentUser.id)
+                .single();
+                
+            if (error && error.code !== 'PGRST116') {
+                console.error('Error fetching logbook:', error);
+                setSyncStatus('error');
+                return;
+            }
+            
+            if (data && data.data) {
+                state.logbookData = data.data;
+                localStorage.setItem(LOGBOOK_STORAGE_KEY, JSON.stringify(state.logbookData));
+                setSyncStatus('synced');
+            } else {
+                // Se não tem dados no Supabase, envia os dados locais
+                await pushLogbookToSupabase();
+            }
+        }
+
+        async function pushLogbookToSupabase() {
+            if (!currentUser) return;
+            setSyncStatus('syncing');
+            const { error } = await supaClient
+                .from('logbooks')
+                .upsert({ 
+                    user_id: currentUser.id, 
+                    data: state.logbookData,
+                    updated_at: new Date().toISOString()
+                });
+                
+            if (error) {
+                console.error('Error pushing logbook:', error);
+                setSyncStatus('error');
+            } else {
+                setSyncStatus('synced');
+            }
+        }
+
+        // Debounced push — evita chamadas excessivas ao Supabase
+        function debouncedPushLogbook() {
+            clearTimeout(syncDebounceTimer);
+            setSyncStatus('syncing');
+            syncDebounceTimer = setTimeout(() => {
+                pushLogbookToSupabase();
+            }, 2000);
+        }
+
+        const workoutData = {
+          1: {
+                    title: "Dia 1",
+                    muscle: "Peito",
+                    exercises: [
+                              {
+                                        id: "e1-1",
+                                        name: "Supino inclinado hbc",
+                                        sets: "4X",
+                                        reps: "12-15 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "pectoral",
+                                        warning: "Peito estufado e a frente dos seus ombros. Empurre o peso para cima com os cotovelos levemente virados para dentro.",
+                                        videoLink: "https://www.youtube.com/shorts/JM1yJGN-hKQ",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e1-2",
+                                        name: "Supino inclinado maq",
+                                        sets: "4X",
+                                        reps: "12-15 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "pectoral",
+                                        warning: "Peito estufado e a frente dos seus ombros. Empurre o peso para cima com os cotovelos levemente virados para dentro.",
+                                        videoLink: "https://www.youtube.com/shorts/TkK7VHMA_VE",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e1-3",
+                                        name: "Paralela livre com carga",
+                                        sets: "3X",
+                                        reps: "2x 6-9 / 1x 12-15 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "pectoral",
+                                        warning: "Incline o tronco ligeiramente para a frente para recrutar mais fibras do peito. Mantenha os cotovelos estáveis.",
+                                        videoLink: "https://www.youtube.com/watch?v=yiingXnH9GY",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e1-4",
+                                        name: "Crucifixo inclinado",
+                                        sets: "3X",
+                                        reps: "8-12 reps",
+                                        note: "Última série até a falha + dropset",
+                                        target: "pectoral",
+                                        warning: "Peito estufado e a frente dos seus ombros. Halter fica na altura da parte superior do peito.",
+                                        videoLink: "https://www.youtube.com/shorts/BNBsJFYBpqk",
+                                        conjugatedGroup: null,
+                                        isDropset: true
+                              },
+                              {
+                                        id: "e1-5",
+                                        name: "Elev lateral banco 45",
+                                        sets: "3X",
+                                        reps: "12-15 reps",
+                                        note: "Última série até a falha + dropset",
+                                        target: "deltoids",
+                                        warning: "Incline-se lateralmente no banco, eleve os halteres de forma controlada concentrando a tensão na lateral do deltoide.",
+                                        videoLink: "https://www.youtube.com/shorts/zA_RKAHGjHg",
+                                        conjugatedGroup: null,
+                                        isDropset: true
+                              },
+                              {
+                                        id: "e1-6",
+                                        name: "Triceps testa halter",
+                                        sets: "3X",
+                                        reps: "10-15 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "triceps",
+                                        warning: "Flexione os cotovelos completos quando descer, na subida mantenha os cotovelos apontados para cima.",
+                                        videoLink: "https://www.youtube.com/shorts/KDiBbTrOjG0",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e1-7",
+                                        name: "Triceps francês polia",
+                                        sets: "3X",
+                                        reps: "12-15 reps",
+                                        note: "Última série até a falha + dropset",
+                                        target: "triceps",
+                                        warning: "Braços podem ficar mais abertos com os cotovelos apontados pra fora pra maior conforto articular.",
+                                        videoLink: "https://www.youtube.com/shorts/D41zJtSpuHI",
+                                        conjugatedGroup: null,
+                                        isDropset: true
+                              }
+                    ]
+          },
+          2: {
+                    title: "Dia 2",
+                    muscle: "Costas",
+                    exercises: [
+                              {
+                                        id: "e2-1",
+                                        name: "Puxada romana",
+                                        sets: "4X",
+                                        reps: "8-12 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "latissimus",
+                                        warning: "Tronco o mais reto possível, abd contraído. Jogue os cotovelos pra baixo e não pra trás.",
+                                        videoLink: "https://www.youtube.com/watch?v=PT7fynrJ2ec",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e2-2",
+                                        name: "Remada cavalinho",
+                                        sets: "4X",
+                                        reps: "8-12 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "latissimus",
+                                        warning: "Tronco paralelo ao chão, o movimento é do cotovelo pra trás em direção a sua linha de cintura. Pode trocar pela maquina caso tenha na academia.",
+                                        videoLink: "https://www.youtube.com/watch?v=Zx12Qvsb3jM",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e2-3",
+                                        name: "Remada pronada no banco",
+                                        sets: "3X",
+                                        reps: "12-15 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "latissimus",
+                                        warning: "Pegada pronada, jogue os cotovelos pra trás fechando as escapulas. Pode trocar por maquinas que tenha pegada pronada ou pela remada no cabo com barra.",
+                                        videoLink: "https://www.youtube.com/shorts/4csS_e4Sy7A",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e2-4",
+                                        name: "Meio terra no smith",
+                                        sets: "3X",
+                                        reps: "2x 6-9 / 1x 12-15 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "latissimus",
+                                        warning: "Trava de segurança na altura da canela. Suba levando o quadril a frente pensando em retrair as escapulas no fim do movimento, nao precisa estender o quadril pra frente curvando a lombar.",
+                                        videoLink: "https://www.youtube.com/watch?v=FedLHPVJhQc",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e2-5",
+                                        name: "Encolhimento smith",
+                                        sets: "3X",
+                                        reps: "8-12 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "deltoids",
+                                        warning: "Inicie apertando as escapulas e só depois faça a elevação do trapézio.",
+                                        videoLink: "https://www.youtube.com/shorts/e0DUR5zMXKc",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e2-6",
+                                        name: "Rosca neutra apoiado",
+                                        sets: "3X",
+                                        reps: "10-15 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "biceps",
+                                        warning: "Ombros e tríceps encostados na parede, movimento controlado.",
+                                        videoLink: "https://www.youtube.com/watch?v=vITEmJ98LRI",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e2-7",
+                                        name: "Rosca spider",
+                                        sets: "3X",
+                                        reps: "10-15 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "biceps",
+                                        warning: "Cotovelos ficam fixos na mesma posição. Alongue o bíceps por completo quando estender os braços.",
+                                        videoLink: "https://www.youtube.com/shorts/B9nwdAWNzCw",
+                                        conjugatedGroup: null
+                              }
+                    ]
+          },
+          3: {
+                    title: "Dia 3",
+                    muscle: "Pernas",
+                    exercises: [
+                              {
+                                        id: "e3-1",
+                                        name: "Prancha",
+                                        sets: "3X",
+                                        reps: "45s a 2min",
+                                        note: "Todas as séries difíceis",
+                                        target: "abs",
+                                        warning: "Abdômen contraído o tempo inteiro, expire pela boca soltando o ar pela barriga.",
+                                        videoLink: "https://www.youtube.com/shorts/ffHr8a6DRvU",
+                                        conjugatedGroup: null,
+                                        isIsometric: true
+                              },
+                              {
+                                        id: "e3-2",
+                                        name: "Abd infra no espaldar",
+                                        sets: "3X",
+                                        reps: "max reps",
+                                        note: "Todas as séries difíceis",
+                                        target: "abs",
+                                        warning: "Segure firme, traga a pelve para dentro na subida flexionando o abdômen e descendo de forma controlada.",
+                                        videoLink: "https://www.youtube.com/watch?v=Gm-o2VQZx8s",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e3-3",
+                                        name: "Cadeira adutora",
+                                        sets: "3X",
+                                        reps: "10-15 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "quads",
+                                        warning: "Abdômen contraído. A força vem da parte interna das coxas.",
+                                        videoLink: "https://www.youtube.com/shorts/lsb18p3cOAk",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e3-4",
+                                        name: "Stiff máquina",
+                                        sets: "4X",
+                                        reps: "10-12 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "quads",
+                                        warning: "Jogue o quadril pra trás sem flexionar os joelhos, chegue no limite da sua amplitude e pause por 1s antes de subir empurrando o quadril a frente.",
+                                        videoLink: "https://www.youtube.com/watch?v=naIsDE3b310",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e3-5",
+                                        name: "Gluteo no banco romano maq",
+                                        sets: "4X",
+                                        reps: "10-12 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "quads",
+                                        warning: "Desça o apoio até ele ficar na altura da coxa, deixando o seu quadril livre. Desça deixando o gluteo alongar, pause por 1s e suba contraindo o gluteo. Nao precisa hiper estender a coluna. Pode trocar pelo banco romano com halter.",
+                                        videoLink: "https://www.youtube.com/shorts/6FyZsNcihd8",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e3-6",
+                                        name: "Cadeira extensora",
+                                        sets: "3X",
+                                        reps: "12-15 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "quads",
+                                        warning: "Pernas ficam alinhadas ao quadril, empurde com explosão e segure o retorno.",
+                                        videoLink: "https://www.youtube.com/shorts/4mLtKKD6IUE",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e3-7",
+                                        name: "Abdutora em pé",
+                                        sets: "3X",
+                                        reps: "12-15 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "quads",
+                                        warning: "Abdômen contraído o tempo inteiro, empurre fazendo força com a parte externa das coxas.",
+                                        videoLink: "https://www.youtube.com/shorts/2FxSXz8SUOI",
+                                        conjugatedGroup: null
+                              }
+                    ]
+          },
+          4: {
+                    title: "Dia 4",
+                    muscle: "Superior",
+                    exercises: [
+                              {
+                                        id: "e4-1",
+                                        name: "Abd polia",
+                                        sets: "4X",
+                                        reps: "8-12 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "abs",
+                                        warning: "Ajoelhado, curve a coluna ativamente contraindo o abdômen contra a resistência.",
+                                        videoLink: "https://www.youtube.com/shorts/W4FS_tKExuI",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e4-2",
+                                        name: "Voador",
+                                        sets: "4X",
+                                        reps: "8-12 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "pectoral",
+                                        warning: "Peito estufado e a frente dos seus ombros. Pense em encostar o bíceps na lateral do peito, as mãos não precisam encostar. Pode fazer na máquina ou na polia.",
+                                        videoLink: "https://www.youtube.com/shorts/9BEQWr0u-ac",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e4-3",
+                                        name: "Supino fechado smith",
+                                        sets: "4X",
+                                        reps: "8-12 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "triceps",
+                                        warning: "Cotovelos para dentro, a pegada é fechada com a distância dos ombros ou um pouco menor. Desça até a parte baixa do peito. Pode fazer livre ou na maquina.",
+                                        videoLink: "https://www.youtube.com/shorts/8_MS8s9ZcEU",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e4-4",
+                                        name: "Puxada polia alta",
+                                        sets: "3X",
+                                        reps: "12-15 reps",
+                                        note: "Última série até a falha",
+                                        target: "latissimus",
+                                        warning: "O movimento é jogando o cotovelo em direção ao seu quadril, pode inclinar e rotacionar levemente o tronco para alongar a dorsal. Dê preferência no banco, mas pode fazer no chão ou na máquina high row.",
+                                        videoLink: "https://www.youtube.com/shorts/b4X8UUHQZxI",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e4-5",
+                                        name: "Remada máquina neutra",
+                                        sets: "4X",
+                                        reps: "8-12 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "latissimus",
+                                        warning: "Apoio abaixo do peito, movimento é feito jogando os cotovelos para trás em direção a parte baixa das costas. Pode trocar pela remada fechada no cabo.",
+                                        videoLink: "https://www.youtube.com/shorts/vnXjj31Xu9U",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e4-6",
+                                        name: "Elev lateral peito apoiado",
+                                        sets: "3X",
+                                        reps: "12-15 reps",
+                                        note: "Última série até a falha + dropset",
+                                        target: "deltoids",
+                                        warning: "Peito apoiado no banco, os braços sobem a frente da linha do tronco.",
+                                        videoLink: "https://www.youtube.com/shorts/Nea2S58aVRQ",
+                                        conjugatedGroup: null,
+                                        isDropset: true
+                              },
+                              {
+                                        id: "e4-7",
+                                        name: "Elev frontal polia",
+                                        sets: "3X",
+                                        reps: "8-12 reps",
+                                        note: "Última série até a falha",
+                                        target: "deltoids",
+                                        warning: "Escapulas levemente retraídas, leve o braço acima até a mão chegar na altura dos seus ombros ou um pouco acima.",
+                                        videoLink: "https://www.youtube.com/shorts/YH4YqqCfAOU",
+                                        conjugatedGroup: null
+                              },
+                              {
+                                        id: "e4-8",
+                                        name: "Rosca scott",
+                                        sets: "3X",
+                                        reps: "10-15 reps",
+                                        note: "Duas últimas séries até a falha",
+                                        target: "biceps",
+                                        warning: "Apoie bem os braços no banco Scott, alongue até o final e suba esmagando o bíceps no topo.",
+                                        videoLink: "https://www.youtube.com/shorts/wiYKWO0AqvI",
+                                        conjugatedGroup: null
+                              }
+                    ]
+          }
+};
+
+        const LOGBOOK_STORAGE_KEY = 'lellesLogbookRammonLimaV1';
+
         const state = {
             currentView: 'home',
             viewHistory: ['home'],
             selectedDay: null,
+            workoutTab: 'training',
+            activeLogbookWeek: 1,
+            logbookData: loadLogbookData(),
+            logbookTimers: {},
             completedExercises: {}, 
             completedSets: {}, 
             
-            // Estados do Cardio
-            cardioMediaActive: false,
-            cardioMediaSeconds: 1800, 
+            // Audio Context Desbloqueável de forma única para iOS
+            audioCtx: null,
 
+            // Estados do Cardio Contínuo (Média)
+            cardioMediaActive: false,
+            cardioMediaSeconds: 1800, // 30 min = 1800s
+            cardioMediaEndTime: null, // Guardar carimbo de data/hora
+            cardioMediaInterval: null,
+
+            // Estados do Cardio HIIT (15 MIN - Alternado 30s/30s)
             cardioHiitActive: false,
-            cardioHiitTotalSeconds: 900, 
-            cardioHiitCycleSeconds: 30, 
-            cardioHiitMode: 'low', 
+            cardioHiitSeconds: 900, // 15 min = 900s
+            cardioHiitIntervalSeconds: 30, // Ciclo corrente de 30s
+            cardioHiitType: 'run', // 'run' (esforço) ou 'rest' (recuperação)
+            cardioHiitStartTime: null, // Carimbo de tempo do início/resumo
+            cardioHiitTotalDurationAtStart: 900,
             cardioHiitInterval: null,
 
             // Rest Timer
             restTimerActive: false,
             restTimerDuration: 90,
             restTimerMax: 90,
+            restTimerEndTime: null, // Guardar carimbo de data/hora do fim do descanso
             restTimerInterval: null
         };
 
-        // Controle de Tempo Real do Mockup (Otimizado)
+        let wakeLock = null;
+        async function requestWakeLock() {
+            if ('wakeLock' in navigator) {
+                try {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                } catch (err) {
+                    console.log('Wake Lock bloqueado ou indisponível:', err);
+                }
+            }
+        }
+
+        function releaseWakeLock() {
+            if (wakeLock !== null) {
+                wakeLock.release().then(() => {
+                    wakeLock = null;
+                });
+            }
+        }
+
+        // Função para inicializar/desbloquear o áudio do iOS na primeira interação do usuário
+        function initAudio() {
+            if (!state.audioCtx) {
+                state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (state.audioCtx && state.audioCtx.state === 'suspended') {
+                state.audioCtx.resume();
+            }
+        }
+
+        // Evento de escuta de visibilidade (quando o usuário volta para o app de treino)
+        document.addEventListener('visibilitychange', async () => {
+            if (document.visibilityState === 'visible') {
+                // Re-solicitar wake lock se algum timer estiver ativo
+                if (state.restTimerActive || state.cardioMediaActive || state.cardioHiitActive) {
+                    await requestWakeLock();
+                }
+                
+                // Recalcular tempos e atualizar telas para prevenir atrasos de repouso
+                if (state.restTimerActive) {
+                    tickRestTimer();
+                }
+                if (state.cardioMediaActive) {
+                    const remainingMs = state.cardioMediaEndTime - Date.now();
+                    state.cardioMediaSeconds = remainingMs > 0 ? Math.ceil(remainingMs / 1000) : 0;
+                    updateCardioMediaUI();
+                }
+                if (state.cardioHiitActive) {
+                    const elapsedMs = Date.now() - state.cardioHiitStartTime;
+                    const elapsedSeconds = Math.floor(elapsedMs / 1000);
+                    const remainingTotal = state.cardioHiitTotalDurationAtStart - elapsedSeconds;
+                    state.cardioHiitSeconds = remainingTotal > 0 ? remainingTotal : 0;
+                    updateCardioHiitUI();
+                }
+            }
+        });
+
+        // Função avançada para extrair a soma real de séries
+        function parseSetsCount(setsStr) {
+            if (!setsStr) return 3;
+            const matches = setsStr.match(/(\d+)\s*[Xx]/g);
+            if (matches && matches.length > 0) {
+                let sum = 0;
+                matches.forEach(m => {
+                    const num = parseInt(m);
+                    if (!isNaN(num)) sum += num;
+                });
+                return sum;
+            }
+            const fallback = parseInt(setsStr);
+            return isNaN(fallback) ? 3 : fallback;
+        }
+
+        // Controle de Tempo Real do Mockup
         function updateMockTime() {
             const now = new Date();
             const min = String(now.getMinutes()).padStart(2, '0');
@@ -559,11 +1132,12 @@
         // Inicialização Principal
         window.onload = function() {
             updateNavigationUI();
-            updateMockTime(); // Inicia com o relógio real imediato
+            updateMockTime();
         };
 
         // Roteamento Simples
         function navigateTo(view) {
+            initAudio(); // Inicializa áudio na navegação
             document.getElementById('view-home').classList.add('hidden');
             document.getElementById('view-days').classList.add('hidden');
             document.getElementById('view-workout').classList.add('hidden');
@@ -576,11 +1150,18 @@
             }
             state.currentView = view;
             
+            // Pausar os timers de Cardio se sair da tela correspondente
+            if (view !== 'cardio') {
+                if (state.cardioMediaActive) toggleCardioMedia();
+                if (state.cardioHiitActive) toggleCardioHiit();
+            }
+
             updateNavigationUI();
         }
 
         // Navegação para trás
         document.getElementById('btn-back').addEventListener('click', () => {
+            initAudio();
             if (state.viewHistory.length > 1) {
                 state.viewHistory.pop();
                 const prevView = state.viewHistory[state.viewHistory.length - 1];
@@ -603,18 +1184,410 @@
 
         // Abertura do Treino Específico do Dia
         function openWorkout(dayNum) {
+            initAudio();
             state.selectedDay = dayNum;
+            state.workoutTab = 'training';
             const data = workoutData[dayNum];
+            if (!data) return;
             
             document.getElementById('workout-day-title').textContent = data.title;
             document.getElementById('workout-muscle-group').textContent = data.muscle;
 
             renderExercises(data.exercises);
+            renderLogbook(data.exercises);
             updateWorkoutProgress();
             navigateTo('workout');
+            updateWorkoutTabs();
         }
 
-        // Renderizar Lista Dinamicamente
+        function setWorkoutTab(tab) {
+            state.workoutTab = tab;
+            updateWorkoutTabs();
+
+            if (tab === 'logbook' && state.selectedDay) {
+                renderLogbook(workoutData[state.selectedDay].exercises);
+            }
+        }
+
+        function updateWorkoutTabs() {
+            const trainingButton = document.getElementById('tab-training');
+            const logbookButton = document.getElementById('tab-logbook');
+            const exerciseContainer = document.getElementById('exercise-list-container');
+            const logbookContainer = document.getElementById('logbook-container');
+
+            if (!trainingButton || !logbookButton || !exerciseContainer || !logbookContainer) return;
+
+            const activeClass = 'bg-gray-900 text-white shadow-md';
+            const inactiveClass = 'text-gray-500 hover:text-gray-900 hover:bg-white/70';
+
+            trainingButton.className = `py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wide transition-all ${state.workoutTab === 'training' ? activeClass : inactiveClass}`;
+            logbookButton.className = `py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wide transition-all ${state.workoutTab === 'logbook' ? activeClass : inactiveClass}`;
+
+            exerciseContainer.classList.toggle('hidden', state.workoutTab !== 'training');
+            logbookContainer.classList.toggle('hidden', state.workoutTab !== 'logbook');
+        }
+
+        function loadLogbookData() {
+            try {
+                return JSON.parse(localStorage.getItem(LOGBOOK_STORAGE_KEY)) || {};
+            } catch (error) {
+                return {};
+            }
+        }
+
+        function persistLogbookData() {
+            try {
+                localStorage.setItem(LOGBOOK_STORAGE_KEY, JSON.stringify(state.logbookData));
+                if (typeof debouncedPushLogbook === 'function') debouncedPushLogbook(); // Sincroniza online com debounce se existir
+            } catch (error) {
+                console.warn('Não foi possível salvar o logbook no navegador.', error);
+            }
+        }
+
+        function getLogbookEntry(exId, week, ex) {
+            const dayKey = `day-${state.selectedDay}`;
+            const weekKey = `week-${week}`;
+
+            if (!state.logbookData[dayKey]) state.logbookData[dayKey] = {};
+            if (!state.logbookData[dayKey][exId]) state.logbookData[dayKey][exId] = {};
+            if (!state.logbookData[dayKey][exId][weekKey]) {
+                const totalSets = Math.max(parseSetsCount(ex?.sets || '3X'), 1);
+                state.logbookData[dayKey][exId][weekKey] = {
+                    notes: '',
+                    sets: Array.from({ length: totalSets }, () => ex?.isIsometric ? { timeSeconds: 0, done: false } : { load: '', reps: '', done: false })
+                };
+            }
+
+            const entry = state.logbookData[dayKey][exId][weekKey];
+            if (!Array.isArray(entry.sets)) {
+                entry.sets = [ex?.isIsometric ? { timeSeconds: 0, done: false } : { load: entry.load || '', reps: entry.reps || '', done: false }];
+                delete entry.load;
+                delete entry.reps;
+            }
+            entry.sets = entry.sets.map((set) => {
+                if (ex?.isIsometric) {
+                    return {
+                        timeSeconds: Number(set.timeSeconds || set.seconds || 0),
+                        done: Boolean(set.done)
+                    };
+                }
+
+                return {
+                    load: set.load || '',
+                    reps: set.reps || '',
+                    done: Boolean(set.done)
+                };
+            });
+            if (typeof entry.notes !== 'string') entry.notes = '';
+
+            return entry;
+        }
+
+        function setLogbookWeek(week) {
+            state.activeLogbookWeek = week;
+            renderLogbook(workoutData[state.selectedDay].exercises);
+        }
+
+        function saveLogbookField(exId, week, setIndex, field, value) {
+            const ex = workoutData[state.selectedDay].exercises.find(item => item.id === exId);
+            const entry = getLogbookEntry(exId, week, ex);
+
+            if (field === 'notes') {
+                entry.notes = value;
+            } else {
+                if (!entry.sets[setIndex]) entry.sets[setIndex] = ex?.isIsometric ? { timeSeconds: 0, done: false } : { load: '', reps: '', done: false };
+                entry.sets[setIndex][field] = field === 'done' ? Boolean(value) : value;
+            }
+
+            persistLogbookData();
+            updateLogbookSummary();
+            showLogbookSavedState();
+
+            if (field === 'done') {
+                renderLogbook(workoutData[state.selectedDay].exercises);
+            }
+        }
+
+        function addLogbookSet(exId, week) {
+            const ex = workoutData[state.selectedDay].exercises.find(item => item.id === exId);
+            const entry = getLogbookEntry(exId, week, ex);
+            entry.sets.push(ex?.isIsometric ? { timeSeconds: 0, done: false } : { load: '', reps: '', done: false });
+            persistLogbookData();
+            renderLogbook(workoutData[state.selectedDay].exercises);
+            showLogbookSavedState();
+        }
+
+        function calculateLogbookTotals(exercises, week = state.activeLogbookWeek) {
+            let totalSets = 0;
+            let volume = 0;
+
+            exercises.forEach((ex) => {
+                const entry = getLogbookEntry(ex.id, week, ex);
+                entry.sets.forEach((set) => {
+                    const load = parseFloat(String(set.load || '').replace(',', '.'));
+                    const reps = parseInt(set.reps, 10);
+                    if (ex.isIsometric) {
+                        if (set.timeSeconds || set.done) totalSets += 1;
+                    } else {
+                        if (set.load || set.reps || set.done) totalSets += 1;
+                        if (!Number.isNaN(load) && !Number.isNaN(reps)) volume += load * reps;
+                    }
+                });
+            });
+
+            return { totalSets, volume: Math.round(volume * 10) / 10 };
+        }
+
+        function updateLogbookSummary() {
+            if (!state.selectedDay) return;
+            const totals = calculateLogbookTotals(workoutData[state.selectedDay].exercises);
+            const volumeEl = document.getElementById('logbook-total-volume');
+            const setsEl = document.getElementById('logbook-total-sets');
+
+            if (volumeEl) volumeEl.textContent = `${totals.volume} kg`;
+            if (setsEl) setsEl.textContent = totals.totalSets;
+        }
+
+        function formatLogbookTime(seconds) {
+            const safeSeconds = Math.max(0, Math.floor(Number(seconds) || 0));
+            const minutes = Math.floor(safeSeconds / 60);
+            const remainingSeconds = safeSeconds % 60;
+            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
+
+        function getLogbookTimerKey(exId, week, setIndex) {
+            return `${state.selectedDay}-${exId}-${week}-${setIndex}`;
+        }
+
+        function toggleIsometricTimer(exId, week, setIndex) {
+            const ex = workoutData[state.selectedDay].exercises.find(item => item.id === exId);
+            const entry = getLogbookEntry(exId, week, ex);
+            if (!entry.sets[setIndex]) entry.sets[setIndex] = { timeSeconds: 0, done: false };
+
+            const key = getLogbookTimerKey(exId, week, setIndex);
+            const timer = state.logbookTimers[key];
+
+            if (timer) {
+                const elapsed = Math.floor((Date.now() - timer.startedAt) / 1000);
+                entry.sets[setIndex].timeSeconds = timer.baseSeconds + elapsed;
+                entry.sets[setIndex].done = true;
+                clearInterval(timer.interval);
+                delete state.logbookTimers[key];
+                persistLogbookData();
+                renderLogbook(workoutData[state.selectedDay].exercises);
+                showLogbookSavedState();
+                return;
+            }
+
+            state.logbookTimers[key] = {
+                baseSeconds: Number(entry.sets[setIndex].timeSeconds || 0),
+                startedAt: Date.now(),
+                interval: setInterval(() => {
+                    const runningTimer = state.logbookTimers[key];
+                    const display = document.getElementById(`timer-display-${exId}-${week}-${setIndex}`);
+                    if (!runningTimer || !display) return;
+
+                    const elapsed = Math.floor((Date.now() - runningTimer.startedAt) / 1000);
+                    display.textContent = formatLogbookTime(runningTimer.baseSeconds + elapsed);
+                }, 250)
+            };
+
+            const button = document.getElementById(`timer-button-${exId}-${week}-${setIndex}`);
+            if (button) {
+                button.className = 'w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md';
+                button.innerHTML = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>';
+            }
+        }
+
+        function resetIsometricTimer(exId, week, setIndex) {
+            const ex = workoutData[state.selectedDay].exercises.find(item => item.id === exId);
+            const entry = getLogbookEntry(exId, week, ex);
+            const key = getLogbookTimerKey(exId, week, setIndex);
+
+            if (state.logbookTimers[key]) {
+                clearInterval(state.logbookTimers[key].interval);
+                delete state.logbookTimers[key];
+            }
+
+            if (!entry.sets[setIndex]) entry.sets[setIndex] = { timeSeconds: 0, done: false };
+            entry.sets[setIndex].timeSeconds = 0;
+            entry.sets[setIndex].done = false;
+            persistLogbookData();
+            renderLogbook(workoutData[state.selectedDay].exercises);
+            showLogbookSavedState();
+        }
+
+        function showLogbookSavedState() {
+            const indicator = document.getElementById('logbook-save-state');
+            if (!indicator) return;
+
+            indicator.textContent = 'Salvo';
+            indicator.classList.remove('text-gray-400');
+            indicator.classList.add('text-emerald-600');
+
+            clearTimeout(state.logbookSaveTimer);
+            state.logbookSaveTimer = setTimeout(() => {
+                indicator.textContent = 'Auto';
+                indicator.classList.add('text-gray-400');
+                indicator.classList.remove('text-emerald-600');
+            }, 1200);
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function escapeJsArg(value) {
+            return escapeHtml(JSON.stringify(value ?? ''));
+        }
+
+        function renderWeekSelector() {
+            let html = '';
+
+            for (let week = 1; week <= 4; week++) {
+                const isActive = state.activeLogbookWeek === week;
+                html += `
+                    <button onclick="setLogbookWeek(${week})" class="py-2.5 rounded-xl text-xs font-extrabold transition-all ${isActive ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-500'}">
+                        Semana ${week}
+                    </button>
+                `;
+            }
+
+            return html;
+        }
+
+        function renderLogbookRows(ex) {
+            const activeWeek = state.activeLogbookWeek;
+            const entry = getLogbookEntry(ex.id, activeWeek, ex);
+            const previousEntry = activeWeek > 1 ? getLogbookEntry(ex.id, activeWeek - 1, ex) : null;
+
+            return entry.sets.map((set, index) => {
+                const previousSet = previousEntry?.sets?.[index];
+                const previousText = ex.isIsometric
+                    ? (previousSet?.timeSeconds ? formatLogbookTime(previousSet.timeSeconds) : '-')
+                    : previousSet && (previousSet.load || previousSet.reps)
+                    ? `${escapeHtml(previousSet.load || '-')}kg x ${escapeHtml(previousSet.reps || '-')}`
+                    : '-';
+
+                if (ex.isIsometric) {
+                    return `
+                        <div class="grid grid-cols-[34px_1fr_150px_36px] items-center gap-2 py-2.5 ${index % 2 === 1 ? 'bg-slate-50' : ''} rounded-xl px-2">
+                            <span class="text-sm font-extrabold text-gray-800">${index + 1}</span>
+                            <span class="text-[11px] font-semibold text-gray-400">${previousText}</span>
+                            <div class="flex items-center justify-end gap-2">
+                                <button id="timer-button-${ex.id}-${activeWeek}-${index}" onclick="toggleIsometricTimer('${ex.id}', ${activeWeek}, ${index})" class="w-9 h-9 rounded-full ${state.logbookTimers[getLogbookTimerKey(ex.id, activeWeek, index)] ? 'bg-rose-500 text-white' : 'bg-indigo-50 text-indigo-600'} flex items-center justify-center shadow-sm">
+                                    ${state.logbookTimers[getLogbookTimerKey(ex.id, activeWeek, index)] ? '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>' : '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'}
+                                </button>
+                                <button onclick="resetIsometricTimer('${ex.id}', ${activeWeek}, ${index})" class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center">
+                                    <img src="https://i.postimg.cc/25SKFvZk/stopwatch.png" alt="Cronômetro" class="w-5 h-5 object-contain">
+                                </button>
+                                <span id="timer-display-${ex.id}-${activeWeek}-${index}" class="w-12 text-right text-sm font-extrabold text-gray-900 font-mono">${formatLogbookTime(set.timeSeconds)}</span>
+                            </div>
+                            <button onclick="saveLogbookField('${ex.id}', ${activeWeek}, ${index}, 'done', ${!set.done})" class="w-8 h-8 rounded-lg flex items-center justify-center transition-all ${set.done ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-400'}">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            </button>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="grid grid-cols-[34px_1fr_70px_58px_36px] items-center gap-2 py-2.5 ${index % 2 === 1 ? 'bg-slate-50' : ''} rounded-xl px-2">
+                        <span class="text-sm font-extrabold text-gray-800">${index + 1}</span>
+                        <span class="text-[11px] font-semibold text-gray-400">${previousText}</span>
+                        <input type="text" inputmode="decimal" value="${escapeHtml(set.load || '')}" oninput="saveLogbookField('${ex.id}', ${activeWeek}, ${index}, 'load', this.value)" placeholder="0" class="w-full bg-transparent border-b border-slate-200 focus:border-indigo-500 outline-none py-1 text-sm font-bold text-gray-800 text-center">
+                        <input type="text" inputmode="numeric" value="${escapeHtml(set.reps || '')}" oninput="saveLogbookField('${ex.id}', ${activeWeek}, ${index}, 'reps', this.value)" placeholder="0" class="w-full bg-transparent border-b border-slate-200 focus:border-indigo-500 outline-none py-1 text-sm font-bold text-gray-800 text-center">
+                        <button onclick="saveLogbookField('${ex.id}', ${activeWeek}, ${index}, 'done', ${!set.done})" class="w-8 h-8 rounded-lg flex items-center justify-center transition-all ${set.done ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-400'}">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderLogbook(exercises) {
+            const container = document.getElementById('logbook-container');
+            if (!container) return;
+            const totals = calculateLogbookTotals(exercises);
+
+            container.innerHTML = `
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <h5 class="text-base font-extrabold text-gray-900">Diário de treino</h5>
+                            <p class="text-[11px] text-gray-500 font-semibold mt-0.5">Registre as séries da semana aberta. As outras ficam recolhidas.</p>
+                        </div>
+                        <span id="logbook-save-state" class="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider">Auto</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3 mt-4 text-center">
+                        <div>
+                            <span class="block text-[10px] font-bold text-gray-400 uppercase">Semana</span>
+                            <strong class="block text-lg font-extrabold text-indigo-600">${state.activeLogbookWeek}</strong>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] font-bold text-gray-400 uppercase">Volume</span>
+                            <strong id="logbook-total-volume" class="block text-lg font-extrabold text-gray-900">${totals.volume} kg</strong>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] font-bold text-gray-400 uppercase">Séries</span>
+                            <strong id="logbook-total-sets" class="block text-lg font-extrabold text-gray-900">${totals.totalSets}</strong>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-4">
+                        ${renderWeekSelector()}
+                    </div>
+                </div>
+            `;
+
+            exercises.forEach((ex) => {
+                const entry = getLogbookEntry(ex.id, state.activeLogbookWeek, ex);
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl p-4 shadow-sm border border-gray-100 overflow-hidden';
+
+                card.innerHTML = `
+                    <div class="mb-3">
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <h5 class="text-sm font-extrabold text-indigo-700 leading-snug">${escapeHtml(ex.name)}</h5>
+                                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">${escapeHtml(ex.sets)} • ${escapeHtml(ex.reps)}</p>
+                            </div>
+                            <span class="text-[10px] text-gray-400 font-bold whitespace-nowrap">${entry.sets.length} séries</span>
+                        </div>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">${escapeHtml(ex.note)}</p>
+                        <textarea oninput="saveLogbookField('${ex.id}', ${state.activeLogbookWeek}, 0, 'notes', this.value)" placeholder="Adicionar notas aqui..." class="mt-2 w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-gray-700 outline-none focus:border-indigo-300 resize-none" rows="2">${escapeHtml(entry.notes || '')}</textarea>
+                    </div>
+                    ${ex.isIsometric ? `
+                        <div class="grid grid-cols-[34px_1fr_150px_36px] gap-2 px-2 pb-1 text-[9px] font-extrabold text-gray-400 uppercase tracking-wide">
+                            <span>Série</span>
+                            <span>Anterior</span>
+                            <span class="text-right">Tempo</span>
+                            <span></span>
+                        </div>
+                    ` : `
+                        <div class="grid grid-cols-[34px_1fr_70px_58px_36px] gap-2 px-2 pb-1 text-[9px] font-extrabold text-gray-400 uppercase tracking-wide">
+                            <span>Série</span>
+                            <span>Anterior</span>
+                            <span class="text-center">Kg</span>
+                            <span class="text-center">Reps</span>
+                            <span></span>
+                        </div>
+                    `}
+                    <div class="space-y-1">
+                        ${renderLogbookRows(ex)}
+                    </div>
+                    <button onclick="addLogbookSet('${ex.id}', ${state.activeLogbookWeek})" class="mt-3 w-full bg-slate-100 hover:bg-slate-200 text-gray-700 py-3 rounded-xl text-sm font-bold active:scale-95 transition-all flex items-center justify-center">
+                        <span class="text-lg mr-2 leading-none">+</span> Adicionar Série
+                    </button>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
         function renderExercises(exercises) {
             const container = document.getElementById('exercise-list-container');
             container.innerHTML = '';
@@ -622,15 +1595,21 @@
             exercises.forEach((ex, idx) => {
                 const isCompleted = state.completedExercises[ex.id] || false;
                 const setsDone = state.completedSets[ex.id] || 0;
-                const totalSets = parseInt(ex.sets) || 3;
-                const videoAction = `window.open('${ex.videoLink}', '_blank')`;
+                const totalSets = parseSetsCount(ex.sets);
+                const videoAction = `window.open(${escapeJsArg(ex.videoLink)}, '_blank')`;
 
                 let cardBgAndBorder = isCompleted ? 'bg-emerald-50/10 border-emerald-300' : 'bg-white border-gray-100';
-                let leftBorder = '';
-                let conjugatedBadge = '';
-
-                // Caixas de metodologia especial: Dropset
                 let methodologyExplanation = '';
+                let conjugatedBadge = '';
+                
+                if (ex.conjugatedGroup) {
+                    conjugatedBadge = `
+                        <span class="inline-flex items-center bg-amber-100 text-amber-800 text-[9px] font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider mb-1.5">
+                            ⚡ Conjugado / Bi-Set
+                        </span>
+                    `;
+                }
+                
                 if (ex.isDropset) {
                     methodologyExplanation = `
                         <div class="mt-2 p-2 bg-rose-50 border border-rose-200 rounded-xl text-[10px] text-rose-800 font-semibold flex items-start space-x-1">
@@ -638,26 +1617,43 @@
                             <span><strong>Dropset:</strong> Após a falha na última série, reduza a carga em 20-25% imediatamente e continue até a falha sem descanso.</span>
                         </div>
                     `;
+                } else if (ex.isClusterSet) {
+                    methodologyExplanation = `
+                        <div class="mt-2 p-2 bg-amber-50 border border-amber-200 rounded-xl text-[10px] text-amber-800 font-semibold flex items-start space-x-1">
+                            <span class="mt-0.5">⏱️</span>
+                            <span><strong>Cluster Set:</strong> Faça 6 séries de 4 repetições descansando 10s entre essas séries. Se não falhar antes de fim tente fazer mais repetições na semana seguinte.</span>
+                        </div>
+                    `;
+                } else if (ex.isRestPause) {
+                    methodologyExplanation = `
+                        <div class="mt-2 p-2 bg-indigo-50 border border-indigo-200 rounded-xl text-[10px] text-indigo-800 font-semibold flex items-start space-x-1">
+                            <span class="mt-0.5">⚡</span>
+                            <span><strong>Rest Pause:</strong> Após falhar, descanse por 30s e vá de novo até a falha com a mesma carga.</span>
+                        </div>
+                    `;
                 }
 
                 const card = document.createElement('div');
-                card.className = `${cardBgAndBorder} ${leftBorder} rounded-2xl p-4 shadow-sm hover:shadow-md transition-all border relative flex flex-col justify-between`;
+                card.className = `${cardBgAndBorder} rounded-2xl p-4 shadow-sm hover:shadow-md transition-all border relative flex flex-col justify-between`;
 
                 card.innerHTML = `
                     <div class="flex items-start justify-between">
                         <div class="flex-1 pr-2">
                             ${conjugatedBadge}
-                            <h5 class="text-base font-bold text-gray-800 leading-snug">${ex.name}</h5>
+                            <h5 class="text-base font-bold text-gray-800 leading-snug">
+                                ${escapeHtml(ex.name)}
+                                ${ex.subText ? `<span class="text-[10px] text-gray-500 font-normal block italic mt-0.5">(${escapeHtml(ex.subText)})</span>` : ''}
+                            </h5>
                             <div class="flex items-baseline space-x-2 mt-1">
-                                <span class="text-lg font-extrabold text-indigo-600">${ex.sets}</span>
-                                <span class="text-sm font-semibold text-gray-600">${ex.reps}</span>
+                                <span class="text-lg font-extrabold text-indigo-600">${escapeHtml(ex.sets)}</span>
+                                <span class="text-sm font-semibold text-gray-600">${escapeHtml(ex.reps)}</span>
                             </div>
-                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">${ex.note}</p>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">${escapeHtml(ex.note)}</p>
                             ${methodologyExplanation}
                         </div>
 
                         <div class="flex items-center space-x-2">
-                            <button onclick="openExecutionModal('${ex.name}', '${ex.target}', '${ex.warning}')" class="flex flex-col items-center group">
+                            <button onclick="openExecutionModal(${escapeJsArg(ex.name)}, ${escapeJsArg(ex.target)}, ${escapeJsArg(ex.warning)})" class="flex flex-col items-center group">
                                 <div class="w-11 h-11 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full flex items-center justify-center border border-slate-200 transition-all active:scale-95 shadow-xs">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                                 </div>
@@ -706,11 +1702,22 @@
         }
 
         function setSeriesProgress(exId, seriesNum) {
+            initAudio();
             const currentDone = state.completedSets[exId] || 0;
             if (currentDone === seriesNum) {
                 state.completedSets[exId] = seriesNum - 1;
             } else {
                 state.completedSets[exId] = seriesNum;
+            }
+
+            const ex = workoutData[state.selectedDay].exercises.find(e => e.id === exId);
+            if (ex) {
+                const totalSets = parseSetsCount(ex.sets);
+                if (state.completedSets[exId] === totalSets) {
+                    state.completedExercises[exId] = true;
+                } else {
+                    state.completedExercises[exId] = false;
+                }
             }
 
             startRestTimer(90);
@@ -720,11 +1727,12 @@
         }
 
         function toggleExerciseComplete(exId) {
+            initAudio();
             state.completedExercises[exId] = !state.completedExercises[exId];
             
             if (state.completedExercises[exId]) {
                 const ex = workoutData[state.selectedDay].exercises.find(e => e.id === exId);
-                const totalSets = parseInt(ex.sets) || 3;
+                const totalSets = parseSetsCount(ex.sets);
                 state.completedSets[exId] = totalSets;
             } else {
                 state.completedSets[exId] = 0;
@@ -751,13 +1759,16 @@
             document.getElementById('workout-progress-bar').style.width = `${percentage}%`;
         }
 
-        // ================= CRONÔMETRO DE DESCANSO =================
         function startRestTimer(duration) {
+            initAudio();
             if (state.restTimerInterval) clearInterval(state.restTimerInterval);
 
             state.restTimerActive = true;
             state.restTimerDuration = duration;
             state.restTimerMax = duration;
+            
+            // Definir carimbo absoluto de término baseado em Date.now()
+            state.restTimerEndTime = Date.now() + duration * 1000;
 
             const bar = document.getElementById('rest-timer-bar');
             bar.classList.remove('hidden');
@@ -765,16 +1776,24 @@
                 bar.classList.remove('-translate-y-10', 'opacity-0');
             }, 50);
 
+            requestWakeLock();
             tickRestTimer();
-            state.restTimerInterval = setInterval(tickRestTimer, 1000);
+            // Frequência rápida para relógio fluido e preciso
+            state.restTimerInterval = setInterval(tickRestTimer, 250);
         }
 
         function tickRestTimer() {
-            if (state.restTimerDuration <= 0) {
+            const now = Date.now();
+            const remainingMs = state.restTimerEndTime - now;
+
+            if (remainingMs <= 0) {
                 stopRestTimer();
-                playChimeSound();
+                playChimeSound(880);
                 return;
             }
+
+            // Converter para segundos de forma absoluta
+            state.restTimerDuration = Math.ceil(remainingMs / 1000);
 
             const minutes = Math.floor(state.restTimerDuration / 60);
             const seconds = state.restTimerDuration % 60;
@@ -783,16 +1802,15 @@
             document.getElementById('timer-count').textContent = displayTime;
             
             const ring = document.getElementById('timer-progress-ring');
-            const circumference = 2 * Math.PI * 20;
-            const offset = circumference - (state.restTimerDuration / state.restTimerMax) * circumference;
-            ring.style.strokeDashoffset = offset;
-
-            state.restTimerDuration--;
+            const circumference = 125.6; // 2 * PI * 20
+            const offset = (state.restTimerDuration / state.restTimerMax) * circumference;
+            ring.style.strokeDashoffset = circumference - offset;
         }
 
-        // Adiciona tempo extra ao intervalo
         function addTimerTime(seconds) {
-            state.restTimerDuration += seconds;
+            initAudio();
+            // Estende o carimbo de tempo final absoluto
+            state.restTimerEndTime += seconds * 1000;
             state.restTimerMax += seconds;
             tickRestTimer();
         }
@@ -800,6 +1818,7 @@
         function stopRestTimer() {
             state.restTimerActive = false;
             if (state.restTimerInterval) clearInterval(state.restTimerInterval);
+            releaseWakeLock();
             
             const bar = document.getElementById('rest-timer-bar');
             bar.classList.add('-translate-y-10', 'opacity-0');
@@ -808,15 +1827,19 @@
             }, 300);
         }
 
-        function playChimeSound() {
+        // Feedback sonoro nativo via Web Audio API desbloqueado para iOS móvel
+        function playChimeSound(freq = 880) {
             try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                initAudio();
+                const ctx = state.audioCtx;
+                if (!ctx) return;
+                
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.connect(gain);
                 gain.connect(ctx.destination);
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, ctx.currentTime);
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
                 gain.gain.setValueAtTime(0.3, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
                 osc.start(ctx.currentTime);
@@ -826,117 +1849,39 @@
             }
         }
 
-        // ================= SISTEMA DE CARDIO INDEPENDENTE =================
-
-        // CARDIO 1: HIIT INTERVALADO (15 min)
-        function toggleCardioHiit() {
-            if (state.cardioHiitActive) {
-                state.cardioHiitActive = false;
-                clearInterval(state.cardioHiitInterval);
-                document.getElementById('txt-hiit-play').textContent = "Retomar";
-                document.getElementById('icon-hiit-play').innerHTML = '<path d="M8 5v14l11-7z"/>';
-            } else {
-                state.cardioHiitActive = true;
-                document.getElementById('txt-hiit-play').textContent = "Pausar";
-                document.getElementById('icon-hiit-play').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-                
-                state.cardioHiitInterval = setInterval(() => {
-                    if (state.cardioHiitTotalSeconds <= 0) {
-                        clearInterval(state.cardioHiitInterval);
-                        state.cardioHiitActive = false;
-                        playChimeSound();
-                        resetCardioHiit();
-                        return;
-                    }
-
-                    state.cardioHiitTotalSeconds--;
-                    state.cardioHiitCycleSeconds--;
-
-                    if (state.cardioHiitCycleSeconds <= 0) {
-                        state.cardioHiitCycleSeconds = 30;
-                        state.cardioHiitMode = (state.cardioHiitMode === 'high') ? 'low' : 'high';
-                        playChimeSound(); 
-                    }
-
-                    updateCardioHiitUI();
-                }, 1000);
-            }
-        }
-
-        function updateCardioHiitUI() {
-            const totalMins = Math.floor(state.cardioHiitTotalSeconds / 60);
-            const totalSecs = state.cardioHiitTotalSeconds % 60;
-            document.getElementById('cardio-hiit-total').textContent = `${String(totalMins).padStart(2, '0')}:${String(totalSecs).padStart(2, '0')}`;
-
-            document.getElementById('cardio-hiit-interval').textContent = `${state.cardioHiitCycleSeconds}s`;
-
-            const ring = document.getElementById('cardio-hiit-progress');
-            const circumference = 251.2; 
-            const offset = (state.cardioHiitCycleSeconds / 30) * circumference;
-            ring.style.strokeDashoffset = circumference - offset;
-
-            const container = document.getElementById('cardio-hiit-container');
-            const tagState = document.getElementById('hiit-state-tag');
-            const pulse = document.getElementById('hiit-pulse-indicator');
-            const substate = document.getElementById('hiit-substate-text');
-
-            if (state.cardioHiitMode === 'high') {
-                container.className = "bg-white rounded-3xl p-5 shadow-xl border-2 border-rose-300 flex flex-col items-center transition-colors duration-500 bg-rose-50/10";
-                tagState.textContent = "CORRIDA ATIVA!";
-                tagState.className = "text-xs font-black text-rose-600 uppercase tracking-wider";
-                pulse.className = "w-2.5 h-2.5 bg-rose-600 rounded-full animate-ping";
-                substate.textContent = "ALTA";
-                substate.className = "text-[8px] text-rose-500 font-bold uppercase tracking-wider";
-                ring.setAttribute('stroke', '#EF4444');
-            } else {
-                container.className = "bg-white rounded-3xl p-5 shadow-xl border-2 border-emerald-300 flex flex-col items-center transition-colors duration-500 bg-emerald-50/10";
-                tagState.textContent = "Descanso Ativo";
-                tagState.className = "text-xs font-bold text-emerald-600 uppercase tracking-wide";
-                pulse.className = "w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping";
-                substate.textContent = "BAIXA";
-                substate.className = "text-[8px] text-emerald-500 font-bold uppercase tracking-wider";
-                ring.setAttribute('stroke', '#10B981');
-            }
-        }
-
-        function resetCardioHiit() {
-            state.cardioHiitActive = false;
-            clearInterval(state.cardioHiitInterval);
-            state.cardioHiitTotalSeconds = 900;
-            state.cardioHiitCycleSeconds = 30;
-            state.cardioHiitMode = 'low'; 
-            updateCardioHiitUI();
-
-            document.getElementById('txt-hiit-play').textContent = "Iniciar";
-            document.getElementById('icon-hiit-play').innerHTML = '<path d="M8 5v14l11-7z"/>';
-        }
-
-        // CARDIO 2: INTENSIDADE MÉDIA CONSTANTE (30 min)
         function toggleCardioMedia() {
+            initAudio();
             if (state.cardioMediaActive) {
                 state.cardioMediaActive = false;
                 clearInterval(state.cardioMediaInterval);
-                document.getElementById('txt-media-play').textContent = "Retomar";
+                document.getElementById('txt-media-play').textContent = "Iniciar";
                 document.getElementById('icon-media-play').innerHTML = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
                 document.getElementById('media-pulse-indicator').classList.remove('animate-ping');
+                releaseWakeLock();
             } else {
                 state.cardioMediaActive = true;
+                
+                // Definir carimbo absoluto de término baseado nos segundos restantes correntes
+                state.cardioMediaEndTime = Date.now() + state.cardioMediaSeconds * 1000;
+
                 document.getElementById('txt-media-play').textContent = "Pausar";
                 document.getElementById('icon-media-play').innerHTML = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
                 document.getElementById('media-pulse-indicator').classList.add('animate-ping');
+                requestWakeLock();
 
                 state.cardioMediaInterval = setInterval(() => {
-                    if (state.cardioMediaSeconds <= 0) {
+                    const remainingMs = state.cardioMediaEndTime - Date.now();
+                    if (remainingMs <= 0) {
                         clearInterval(state.cardioMediaInterval);
                         state.cardioMediaActive = false;
-                        playChimeSound();
+                        playChimeSound(1000);
                         resetCardioMedia();
                         return;
                     }
 
-                    state.cardioMediaSeconds--;
+                    state.cardioMediaSeconds = Math.ceil(remainingMs / 1000);
                     updateCardioMediaUI();
-                }, 1000);
+                }, 250);
             }
         }
 
@@ -952,20 +1897,134 @@
         }
 
         function resetCardioMedia() {
+            initAudio();
             state.cardioMediaActive = false;
             clearInterval(state.cardioMediaInterval);
             state.cardioMediaSeconds = 1800; 
             updateCardioMediaUI();
+            releaseWakeLock();
 
             document.getElementById('txt-media-play').textContent = "Iniciar";
             document.getElementById('icon-media-play').innerHTML = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
             document.getElementById('media-pulse-indicator').classList.remove('animate-ping');
         }
 
-        // ================= MODAIS DE EXECUTOR ANATÔMICO =================
+        function toggleCardioHiit() {
+            initAudio();
+            if (state.cardioHiitActive) {
+                state.cardioHiitActive = false;
+                clearInterval(state.cardioHiitInterval);
+                document.getElementById('btn-hiit-start').innerHTML = `
+                    <span id="icon-hiit-play" class="flex items-center justify-center mr-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </span>
+                    <span id="txt-hiit-play">Iniciar</span>
+                `;
+                releaseWakeLock();
+            } else {
+                state.cardioHiitActive = true;
+                
+                // Gravar quando o HIIT foi iniciado/retomado e quanto tempo restava naquele exato momento
+                state.cardioHiitStartTime = Date.now();
+                state.cardioHiitTotalDurationAtStart = state.cardioHiitSeconds;
+
+                document.getElementById('btn-hiit-start').innerHTML = `
+                    <span id="icon-hiit-play" class="flex items-center justify-center mr-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                    </span>
+                    <span id="txt-hiit-play">Pausar</span>
+                `;
+                requestWakeLock();
+                playChimeSound(660);
+
+                state.cardioHiitInterval = setInterval(() => {
+                    const elapsedMs = Date.now() - state.cardioHiitStartTime;
+                    const elapsedSeconds = Math.floor(elapsedMs / 1000);
+                    const remainingTotal = state.cardioHiitTotalDurationAtStart - elapsedSeconds;
+
+                    if (remainingTotal <= 0) {
+                        clearInterval(state.cardioHiitInterval);
+                        state.cardioHiitActive = false;
+                        playChimeSound(1200);
+                        resetCardioHiit();
+                        return;
+                    }
+
+                    state.cardioHiitSeconds = remainingTotal;
+
+                    // HIIT tem ciclos totais de 60 segundos (30s de esforço + 30s de descanso)
+                    const totalHiitElapsed = 900 - remainingTotal;
+                    const currentPhaseIndex = Math.floor(totalHiitElapsed / 30);
+                    const newType = (currentPhaseIndex % 2 === 0) ? 'run' : 'rest';
+
+                    const prevType = state.cardioHiitType;
+                    state.cardioHiitType = newType;
+                    state.cardioHiitIntervalSeconds = 30 - (totalHiitElapsed % 30);
+
+                    // Se a fase mudou, emitir alerta sonoro biomecânico específico
+                    if (prevType !== newType) {
+                        if (newType === 'run') {
+                            playChimeSound(880); // Som agudo para Corrida
+                        } else {
+                            playChimeSound(440); // Som grave para Descanso
+                        }
+                    }
+
+                    updateCardioHiitUI();
+                }, 250);
+            }
+        }
+
+        function updateCardioHiitUI() {
+            const totalMins = Math.floor(state.cardioHiitSeconds / 60);
+            const totalSecs = state.cardioHiitSeconds % 60;
+            document.getElementById('cardio-hiit-total').textContent = `${String(totalMins).padStart(2, '0')}:${String(totalSecs).padStart(2, '0')}`;
+            
+            const ring = document.getElementById('cardio-hiit-progress');
+            const circumference = 301.6; 
+            const offset = (state.cardioHiitSeconds / 900) * circumference;
+            ring.style.strokeDashoffset = circumference - offset;
+
+            document.getElementById('cardio-hiit-interval-time').textContent = `${state.cardioHiitIntervalSeconds}s`;
+
+            const stateTag = document.getElementById('hiit-state-tag');
+            const intervalTimeText = document.getElementById('cardio-hiit-interval-time');
+
+            if (state.cardioHiitType === 'run') {
+                stateTag.textContent = "CORRIDA 🔥";
+                stateTag.className = "inline-flex items-center bg-rose-100/60 text-rose-600 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide animate-pulse-subtle";
+                intervalTimeText.className = "text-4xl font-extrabold text-[#E11D48] mt-2 font-mono";
+                ring.setAttribute('stroke', '#E11D48'); 
+            } else {
+                stateTag.textContent = "DESCANSO 🛡️";
+                stateTag.className = "inline-flex items-center bg-sky-100/60 text-sky-600 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide";
+                intervalTimeText.className = "text-4xl font-extrabold text-[#0EA5E9] mt-2 font-mono";
+                ring.setAttribute('stroke', '#0EA5E9'); 
+            }
+        }
+
+        function resetCardioHiit() {
+            initAudio();
+            state.cardioHiitActive = false;
+            clearInterval(state.cardioHiitInterval);
+            state.cardioHiitSeconds = 900; 
+            state.cardioHiitIntervalSeconds = 30; 
+            state.cardioHiitType = 'run'; 
+            updateCardioHiitUI();
+            releaseWakeLock();
+
+            document.getElementById('btn-hiit-start').innerHTML = `
+                <span id="icon-hiit-play" class="flex items-center justify-center mr-1">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </span>
+                <span id="txt-hiit-play">Iniciar</span>
+            `;
+        }
+
         function openExecutionModal(name, target, warning) {
+            initAudio();
             document.getElementById('modal-exe-title').textContent = name;
-            document.getElementById('modal-exe-tip').innerHTML = `<span class="font-bold text-indigo-900">💡 Dica do exercício:</span> ${warning}`;
+            document.getElementById('modal-exe-tip').innerHTML = `<span class="font-bold text-indigo-900">💡 Dica do exercício:</span> ${escapeHtml(warning)}`;
             
             const muscles = ['svg-latissimus', 'svg-pectoral', 'svg-deltoids-l', 'svg-deltoids-r', 'svg-biceps-l', 'svg-biceps-r', 'svg-triceps-l', 'svg-triceps-r', 'svg-quads-l', 'svg-quads-r', 'svg-abs'];
             muscles.forEach(m => {
@@ -1008,20 +2067,6 @@
             document.getElementById('modal-execution').classList.add('hidden');
         }
 
-        // Modais Extras Auxiliares
-        function openSupportModal() {
-            document.getElementById('modal-support').classList.remove('hidden');
-        }
-        function closeSupportModal() {
-            document.getElementById('modal-support').classList.add('hidden');
-        }
-
-        function openOffersModal() {
-            document.getElementById('modal-offers').classList.remove('hidden');
-        }
-        function closeOffersModal() {
-            document.getElementById('modal-offers').classList.add('hidden');
-        }
     </script>
 </body>
 </html>
